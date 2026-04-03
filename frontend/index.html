@@ -6844,13 +6844,13 @@
           const total = myPayments
             .filter((p) => p.status === "completed")
             .reduce((s, p) => s + p.amount, 0);
-          const pending = myPayments.filter(
+          const now = new Date(); const thisMonth = myPayments.filter(p => p.status === "completed" && new Date(p.paid_at).getMonth() === now.getMonth()).reduce((s,p) => s + p.amount, 0); const pending = myPayments.filter(
             (p) => p.status === "pending",
           ).length;
           document.getElementById("payment-stats-grid").innerHTML = `
       ${statCard("Cəmi Gəlir", "₼" + total, "💰", "gold", "Tamamlanan")}
       ${statCard("Gözlənilən", pending + " ödəniş", "⏳", "blue", "Pending")}
-      ${statCard("Bu ay", "₼390", "📅", "green", "Oktyabr")}
+      ${statCard("Bu ay", "₼" + thisMonth, "📅", "green", new Date().toLocaleDateString("az-AZ", {month: "long"}))}
     `;
 
           // Payment populate select
