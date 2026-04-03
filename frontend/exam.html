@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="az" class="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mentorix.biz — İmtahan & AI Copilot</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --indigo-950: #0f0c29;
+  --indigo-900: #1e1b4b;
+  --indigo-800: #2d2875;
+  --blue-electric: #3b82f6;
+  --blue-bright: #60a5fa;
+  --neon-green: #22d3ee;
+  --neon-emerald: #10b981;
+  --gold: #f59e0b;
+  --red-alert: #ef4444;
+  --purple: #8b5cf6;
+  --surface-1: #13112e;
+  --surface-2: #1a1740;
+  --surface-3: #211e52;
+  --border: rgba(99,102,241,0.18);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--indigo-950);color:var(--text-primary);font-size:14px;}
+h1,h2,h3,.syne{font-family:'Syne',sans-serif;}
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:var(--surface-1);}
+::-webkit-scrollbar-thumb{background:var(--indigo-800);border-radius:2px;}
+
+.grid-bg{
+  background-image:linear-gradient(rgba(59,130,246,0.04) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(59,130,246,0.04) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+.card{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;}
+.card-glow{
+  background:linear-gradient(135deg,var(--surface-2),var(--surface-3));
+  border:1px solid rgba(99,102,241,0.3);border-radius:16px;position:relative;overflow:hidden;
+}
+.card-glow::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blue-electric),transparent);opacity:0.6;}
+
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:10px;font-weight:600;font-size:13px;cursor:pointer;transition:all 0.2s;border:none;font-family:'DM Sans',sans-serif;}
+.btn-primary{background:linear-gradient(135deg,var(--blue-electric),#6366f1);color:white;box-shadow:0 4px 14px rgba(59,130,246,0.3);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(59,130,246,0.4);}
+.btn-secondary{background:var(--surface-3);color:var(--text-primary);border:1px solid var(--border);}
+.btn-secondary:hover{background:var(--indigo-800);}
+.btn-ghost{background:transparent;color:var(--text-secondary);padding:6px 12px;}
+.btn-ghost:hover{color:var(--text-primary);background:var(--surface-3);}
+.btn-danger{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.25);}
+.btn-success{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.25);}
+.btn-purple{background:linear-gradient(135deg,#8b5cf6,#6366f1);color:white;box-shadow:0 4px 14px rgba(139,92,246,0.3);}
+.btn-sm{padding:5px 12px;font-size:12px;}
+
+.form-input{width:100%;background:var(--surface-1);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text-primary);font-family:'DM Sans',sans-serif;font-size:13.5px;outline:none;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--blue-electric);box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
+.form-input::placeholder{color:var(--text-muted);}
+.form-label{display:block;font-size:11px;font-weight:700;color:var(--text-secondary);margin-bottom:6px;letter-spacing:0.05em;text-transform:uppercase;}
+select.form-input option{background:var(--surface-2);}
+textarea.form-input{resize:vertical;}
+
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600;}
+.badge-blue{background:rgba(59,130,246,0.15);color:var(--blue-bright);border:1px solid rgba(59,130,246,0.25);}
+.badge-green{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.25);}
+.badge-gold{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.25);}
+.badge-red{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.25);}
+.badge-purple{background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.25);}
+
+.tab-btn{padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;color:var(--text-muted);background:transparent;border:none;font-family:'DM Sans',sans-serif;}
+.tab-btn.active{background:var(--surface-3);color:var(--blue-bright);}
+
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:var(--surface-2);border:1px solid var(--border);border-radius:20px;padding:28px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;transform:scale(0.95);transition:transform 0.25s;}
+.modal-overlay.open .modal-box{transform:scale(1);}
+
+.toggle{position:relative;display:inline-block;width:44px;height:24px;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--surface-3);border-radius:24px;border:1px solid var(--border);transition:.3s;}
+.toggle-slider:before{content:"";position:absolute;height:16px;width:16px;left:3px;bottom:3px;background:var(--text-muted);border-radius:50%;transition:.3s;}
+.toggle input:checked+.toggle-slider{background:rgba(59,130,246,0.3);border-color:var(--blue-electric);}
+.toggle input:checked+.toggle-slider:before{transform:translateX(20px);background:var(--blue-electric);}
+
+/* Countdown timer */
+.countdown-ring{position:relative;display:inline-flex;align-items:center;justify-content:center;}
+.countdown-svg{transform:rotate(-90deg);}
+.countdown-circle{transition:stroke-dashoffset 1s linear;stroke-linecap:round;}
+
+/* Warning flash */
+@keyframes warningFlash{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.warning-flash{animation:warningFlash 0.8s ease infinite;}
+
+/* AI chat bubble */
+.ai-bubble{padding:14px 18px;border-radius:14px;font-size:13px;line-height:1.6;margin-bottom:10px;max-width:85%;}
+.ai-bubble.assistant{background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);align-self:flex-start;}
+.ai-bubble.user{background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.25);align-self:flex-end;margin-left:auto;}
+
+/* AI typing indicator */
+@keyframes bounce{0%,80%,100%{transform:scale(0);}40%{transform:scale(1);}}
+.typing-dot{width:6px;height:6px;border-radius:50%;background:var(--blue-bright);display:inline-block;animation:bounce 1.4s infinite ease-in-out;}
+.typing-dot:nth-child(1){animation-delay:-0.32s;}
+.typing-dot:nth-child(2){animation-delay:-0.16s;}
+
+/* Question option */
+.option-btn{
+  width:100%;padding:12px 16px;border-radius:10px;border:1.5px solid var(--border);
+  background:var(--surface-3);color:var(--text-primary);cursor:pointer;
+  transition:all 0.2s;text-align:left;font-family:'DM Sans',sans-serif;font-size:13px;
+  display:flex;align-items:center;gap:10px;
+}
+.option-btn:hover{border-color:rgba(59,130,246,0.4);background:rgba(59,130,246,0.05);}
+.option-btn.selected{border-color:var(--blue-electric);background:rgba(59,130,246,0.1);color:var(--blue-bright);}
+.option-btn.correct{border-color:#10b981;background:rgba(16,185,129,0.1);color:#34d399;}
+.option-btn.wrong{border-color:#ef4444;background:rgba(239,68,68,0.1);color:#f87171;}
+
+/* Progress bar */
+.progress-bar{height:6px;background:var(--surface-3);border-radius:999px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:999px;transition:width 0.4s ease;}
+
+/* Sidebar */
+.sidebar{width:220px;background:var(--surface-1);border-right:1px solid var(--border);height:100vh;position:fixed;left:0;top:0;z-index:40;display:flex;flex-direction:column;}
+.main{margin-left:220px;height:100vh;overflow-y:auto;}
+@media(max-width:768px){.sidebar{display:none;}.main{margin-left:0;}}
+
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;cursor:pointer;transition:all 0.2s;color:var(--text-secondary);font-size:13px;font-weight:500;margin:1px 8px;}
+.nav-item:hover{background:var(--surface-3);color:var(--text-primary);}
+.nav-item.active{background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(99,102,241,0.15));color:var(--blue-bright);border:1px solid rgba(59,130,246,0.2);}
+
+.page{display:none;}
+.page.active{display:block;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.fade-up{animation:fadeUp 0.35s ease forwards;}
+
+/* AI provider card */
+.ai-provider-card{
+  border:2px solid var(--border);border-radius:14px;padding:16px;cursor:pointer;
+  transition:all 0.2s;text-align:center;background:var(--surface-3);
+}
+.ai-provider-card:hover,.ai-provider-card.active{border-color:var(--purple);background:rgba(139,92,246,0.1);}
+
+/* Exam question card */
+.question-card{
+  background:var(--surface-2);border:1px solid var(--border);border-radius:14px;
+  padding:20px;margin-bottom:14px;transition:all 0.2s;
+}
+.question-card:hover{border-color:rgba(99,102,241,0.3);}
+
+/* Score ring */
+.score-ring-wrap{position:relative;display:inline-flex;align-items:center;justify-content:center;}
+</style>
+</head>
+<body class="grid-bg">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div style="padding:20px 16px 12px;">
+    <a href="/" style="text-decoration:none;">
+      <div style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800;background:linear-gradient(135deg,#3b82f6,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">mentorix</div>
+      <div style="font-size:9px;color:var(--text-muted);letter-spacing:0.25em;">.biz</div>
+    </a>
+    <div style="margin-top:14px;padding:10px;background:var(--surface-3);border-radius:10px;">
+      <div id="sb-avatar" style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;margin-bottom:6px;"></div>
+      <div id="sb-name" style="font-size:13px;font-weight:600;"></div>
+      <div id="sb-role" style="font-size:11px;color:var(--text-muted);margin-top:2px;"></div>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding-bottom:16px;">
+    <div class="nav-item active" id="nav-exams" onclick="showPage('exams')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      İmtahanlar
+    </div>
+    <div class="nav-item" id="nav-create" onclick="showPage('create')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      Yeni İmtahan
+    </div>
+    <div class="nav-item" id="nav-results" onclick="showPage('results')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      Nəticələr
+    </div>
+    <div class="nav-item" id="nav-copilot" onclick="showPage('copilot')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 8v4l3 3"/><circle cx="18" cy="5" r="3" fill="currentColor"/></svg>
+      🤖 AI Copilot
+    </div>
+    <div style="margin:12px 16px 6px;font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--text-muted);text-transform:uppercase;">Keçidlər</div>
+    <a href="/" class="nav-item" style="text-decoration:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Ana Panel
+    </a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- Top bar -->
+  <div style="background:var(--surface-1);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:30;">
+    <div id="page-title" style="font-family:'Syne',sans-serif;font-size:17px;font-weight:700;flex:1;"></div>
+    <div id="active-exam-timer" style="display:none;"></div>
+  </div>
+
+  <!-- PAGE: Exams List -->
+  <div class="page active" id="page-exams" style="padding:24px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;" class="fade-up">
+      <div>
+        <div class="syne" style="font-size:18px;font-weight:700;">İmtahanlar</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Bütün imtahanları idarə edin</div>
+      </div>
+      <button class="btn btn-primary" onclick="showPage('create')">+ Yeni İmtahan</button>
+    </div>
+
+    <!-- Tabs -->
+    <div style="display:flex;gap:4px;margin-bottom:20px;background:var(--surface-1);padding:4px;border-radius:10px;width:fit-content;">
+      <button class="tab-btn active" id="etab-upcoming" onclick="filterExams('upcoming')">Gələcək</button>
+      <button class="tab-btn" id="etab-active" onclick="filterExams('active')">Aktiv</button>
+      <button class="tab-btn" id="etab-completed" onclick="filterExams('completed')">Tamamlanan</button>
+      <button class="tab-btn" id="etab-all" onclick="filterExams('all')">Hamısı</button>
+    </div>
+
+    <div id="exams-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;"></div>
+  </div>
+
+  <!-- PAGE: Create Exam -->
+  <div class="page" id="page-create" style="padding:24px;max-width:860px;">
+    <div style="margin-bottom:24px;" class="fade-up">
+      <div class="syne" style="font-size:18px;font-weight:700;">Yeni İmtahan Yarat</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Bütün detalları doldur</div>
+    </div>
+
+    <!-- Step indicator -->
+    <div style="display:flex;gap:0;margin-bottom:28px;" id="step-indicator">
+      <div class="step-item active" data-step="1" style="flex:1;text-align:center;padding:10px;border-bottom:2px solid var(--blue-electric);cursor:pointer;" onclick="goStep(1)">
+        <div style="font-size:11px;font-weight:700;color:var(--blue-bright);">1 — Ümumi</div>
+      </div>
+      <div class="step-item" data-step="2" style="flex:1;text-align:center;padding:10px;border-bottom:2px solid var(--border);cursor:pointer;" onclick="goStep(2)">
+        <div style="font-size:11px;font-weight:700;color:var(--text-muted);">2 — Suallar</div>
+      </div>
+      <div class="step-item" data-step="3" style="flex:1;text-align:center;padding:10px;border-bottom:2px solid var(--border);cursor:pointer;" onclick="goStep(3)">
+        <div style="font-size:11px;font-weight:700;color:var(--text-muted);">3 — Tənzimləmə</div>
+      </div>
+      <div class="step-item" data-step="4" style="flex:1;text-align:center;padding:10px;border-bottom:2px solid var(--border);cursor:pointer;" onclick="goStep(4)">
+        <div style="font-size:11px;font-weight:700;color:var(--text-muted);">4 — Yekun</div>
+      </div>
+    </div>
+
+    <!-- Step 1: General info -->
+    <div id="step-1">
+      <div class="card" style="padding:24px;margin-bottom:16px;">
+        <div class="syne" style="font-size:14px;font-weight:700;margin-bottom:18px;">📋 Ümumi Məlumat</div>
+        <div style="display:grid;gap:16px;">
+          <div>
+            <label class="form-label">İmtahan Adı</label>
+            <input class="form-input" id="ex-title" placeholder="Riyaziyyat Yarımillik İmtahanı"/>
+          </div>
+          <div>
+            <label class="form-label">Açıqlama</label>
+            <textarea class="form-input" id="ex-desc" rows="2" placeholder="İmtahan haqqında qısa məlumat..."></textarea>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+            <div>
+              <label class="form-label">Fənn / Mövzu</label>
+              <input class="form-input" id="ex-subject" placeholder="Riyaziyyat"/>
+            </div>
+            <div>
+              <label class="form-label">Tələbə / Qrup</label>
+              <select class="form-input" id="ex-students" multiple style="height:80px;">
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:24px;margin-bottom:16px;">
+        <div class="syne" style="font-size:14px;font-weight:700;margin-bottom:18px;">⏰ Vaxt Tənzimləməsi</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div>
+            <label class="form-label">Başlama tarixi və saatı</label>
+            <input type="datetime-local" class="form-input" id="ex-start"/>
+          </div>
+          <div>
+            <label class="form-label">Müddət (dəqiqə)</label>
+            <input type="number" class="form-input" id="ex-duration" value="60" min="5" max="300"/>
+          </div>
+          <div>
+            <label class="form-label">1-ci xəbərdarlıq (bitmədən neçə dəq)</label>
+            <select class="form-input" id="ex-warn1">
+              <option value="5">5 dəqiqə</option>
+              <option value="10" selected>10 dəqiqə</option>
+              <option value="15">15 dəqiqə</option>
+              <option value="20">20 dəqiqə</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">2-ci xəbərdarlıq (bitmədən neçə dəq)</label>
+            <select class="form-input" id="ex-warn2">
+              <option value="1" selected>1 dəqiqə</option>
+              <option value="2">2 dəqiqə</option>
+              <option value="3">3 dəqiqə</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:24px;">
+        <div class="syne" style="font-size:14px;font-weight:700;margin-bottom:18px;">📄 Sual Formatı</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <label style="cursor:pointer;" onclick="setQuestionFormat('manual')">
+            <div class="ai-provider-card" id="fmt-manual" style="border-color:var(--purple);">
+              <div style="font-size:28px;margin-bottom:8px;">✏️</div>
+              <div style="font-weight:700;font-size:13px;">Manual Suallar</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Qapalı (ABCDE) və açıq suallar</div>
+            </div>
+          </label>
+          <label style="cursor:pointer;" onclick="setQuestionFormat('pdf')">
+            <div class="ai-provider-card" id="fmt-pdf">
+              <div style="font-size:28px;margin-bottom:8px;">📄</div>
+              <div style="font-weight:700;font-size:13px;">PDF Yüklə</div>
+              <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">PDF sənəd, cavablar manual</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+        <button class="btn btn-primary" onclick="goStep(2)">Növbəti: Suallar →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Questions -->
+    <div id="step-2" style="display:none;">
+      <!-- Manual questions -->
+      <div id="manual-q-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div class="syne" style="font-size:15px;font-weight:700;">Suallar</div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" onclick="addQuestion('closed')">+ Qapalı Sual (ABCDE)</button>
+            <button class="btn btn-secondary btn-sm" onclick="addQuestion('open')">+ Açıq Sual</button>
+          </div>
+        </div>
+
+        <div id="questions-container"></div>
+
+        <div class="card" style="padding:16px;margin-top:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-size:13px;color:var(--text-muted);">Cəmi sual: <strong id="q-count" style="color:var(--blue-bright);">0</strong></div>
+            <div style="font-size:13px;color:var(--text-muted);">Bal sistemi: <strong style="color:#fbbf24;">Hər 4 səhv = 1 düzgün silinir</strong></div>
+            <div style="font-size:13px;color:var(--text-muted);">Ümumi: <strong style="color:#34d399;">100%</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PDF section -->
+      <div id="pdf-q-section" style="display:none;">
+        <div class="card" style="padding:28px;text-align:center;">
+          <div style="font-size:48px;margin-bottom:14px;">📄</div>
+          <div class="syne" style="font-size:15px;font-weight:700;margin-bottom:8px;">PDF Sual Sənədi Yüklə</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">Maksimum 10MB • PDF formatında</div>
+          <div style="border:2px dashed var(--border);border-radius:14px;padding:32px;cursor:pointer;transition:all 0.2s;" id="pdf-drop-zone" onclick="document.getElementById('pdf-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--blue-electric)'" ondrop="handlePdfDrop(event)">
+            <div id="pdf-upload-text">
+              <div style="font-size:32px;margin-bottom:8px;">⬆️</div>
+              <div style="font-size:13px;color:var(--text-secondary);">Faylı bura sürüklə və ya klik et</div>
+            </div>
+            <div id="pdf-uploaded-info" style="display:none;color:#34d399;font-weight:600;"></div>
+            <input type="file" id="pdf-input" accept=".pdf" style="display:none;" onchange="onPdfSelected(this)"/>
+          </div>
+        </div>
+
+        <div class="card" style="padding:24px;margin-top:16px;">
+          <div class="syne" style="font-size:14px;font-weight:700;margin-bottom:16px;">Cavab Açarı (PDF sualları üçün)</div>
+          <div id="pdf-answers-container"></div>
+          <div style="display:flex;gap:8px;margin-top:12px;">
+            <input type="number" class="form-input" id="pdf-q-count" placeholder="Sual sayı" style="width:140px;" min="1" max="100"/>
+            <button class="btn btn-secondary" onclick="generatePdfAnswers()">Cavab Sahələri Yarat</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;margin-top:20px;">
+        <button class="btn btn-secondary" onclick="goStep(1)">← Geri</button>
+        <button class="btn btn-primary" onclick="goStep(3)">Növbəti: Tənzimləmə →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Settings -->
+    <div id="step-3" style="display:none;">
+      <div class="card" style="padding:24px;margin-bottom:16px;">
+        <div class="syne" style="font-size:14px;font-weight:700;margin-bottom:18px;">⚙️ İmtahan Qaydaları</div>
+        <div style="display:grid;gap:14px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface-3);border-radius:12px;">
+            <div>
+              <div style="font-weight:600;font-size:13px;">Sualların qarışdırılması</div>
+              <div style="font-size:11px;color:var(--text-muted);">Hər tələbəyə fərqli sıra</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="opt-shuffle" checked/><span class="toggle-slider"></span></label>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface-3);border-radius:12px;">
+            <div>
+              <div style="font-weight:600;font-size:13px;">Geri qayıtmaq icazəsi</div>
+              <div style="font-size:11px;color:var(--text-muted);">Əvvəlki suala qayıtmaq</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="opt-goback" checked/><span class="toggle-slider"></span></label>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface-3);border-radius:12px;">
+            <div>
+              <div style="font-weight:600;font-size:13px;">Avtomatik təqdim</div>
+              <div style="font-size:11px;color:var(--text-muted);">Vaxt bitdikdə avtomatik göndər</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="opt-autosubmit" checked/><span class="toggle-slider"></span></label>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--surface-3);border-radius:12px;">
+            <div>
+              <div style="font-weight:600;font-size:13px;">Nəticəni dərhal göstər</div>
+              <div style="font-size:11px;color:var(--text-muted);">İmtahan bitdikdə bal göstərilsin</div>
+            </div>
+            <label class="toggle"><input type="checkbox" id="opt-showresult" checked/><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:24px;">
+        <div class="syne" style="font-size:14px;font-weight:700;margin-bottom:18px;">🔔 Xəbərdarlıq Mesajları</div>
+        <div style="display:grid;gap:12px;">
+          <div>
+            <label class="form-label">1-ci xəbərdarlıq mətni</label>
+            <input class="form-input" id="warn1-msg" value="⚠️ Diqqət! İmtahanın bitməsinə {N} dəqiqə qalıb. Cavablarınızı yoxlayın."/>
+          </div>
+          <div>
+            <label class="form-label">2-ci xəbərdarlıq mətni</label>
+            <input class="form-input" id="warn2-msg" value="🔴 Kritik! İmtahanın bitməsinə {N} dəqiqə qalıb! Tez olun!"/>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;margin-top:20px;">
+        <button class="btn btn-secondary" onclick="goStep(2)">← Geri</button>
+        <button class="btn btn-primary" onclick="goStep(4)">Növbəti: Yekun →</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Review & Save -->
+    <div id="step-4" style="display:none;">
+      <div class="card-glow" style="padding:28px;margin-bottom:16px;">
+        <div class="syne" style="font-size:16px;font-weight:800;margin-bottom:20px;">✅ İmtahan Xülasəsi</div>
+        <div id="exam-summary"></div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
+        <button class="btn btn-secondary" onclick="goStep(3)">← Geri</button>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-secondary" onclick="saveExam('draft')">📝 Qaralama Saxla</button>
+          <button class="btn btn-primary" onclick="saveExam('scheduled')">🚀 İmtahanı Planla</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE: Results -->
+  <div class="page" id="page-results" style="padding:24px;">
+    <div style="margin-bottom:20px;">
+      <div class="syne" style="font-size:18px;font-weight:700;">İmtahan Nəticələri</div>
+    </div>
+    <div id="results-list"></div>
+  </div>
+
+  <!-- PAGE: AI Copilot -->
+  <div class="page" id="page-copilot" style="padding:24px;height:calc(100vh - 57px);display:none;flex-direction:column;">
+    <!-- AI Provider Selection -->
+    <div style="margin-bottom:20px;">
+      <div class="syne" style="font-size:18px;font-weight:700;margin-bottom:4px;">🤖 AI Copilot</div>
+      <div style="font-size:12px;color:var(--text-muted);">Suni intellekt köməkçiniz — dərs planı, sual yaratma, tələbə analizi</div>
+    </div>
+
+    <!-- Provider tabs -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px;">
+      <div class="ai-provider-card active" id="prov-claude" onclick="selectProvider('claude')">
+        <div style="font-size:22px;margin-bottom:6px;">🟠</div>
+        <div style="font-size:12px;font-weight:700;">Claude</div>
+        <div style="font-size:10px;color:var(--text-muted);">Anthropic</div>
+      </div>
+      <div class="ai-provider-card" id="prov-chatgpt" onclick="selectProvider('chatgpt')">
+        <div style="font-size:22px;margin-bottom:6px;">🟢</div>
+        <div style="font-size:12px;font-weight:700;">ChatGPT</div>
+        <div style="font-size:10px;color:var(--text-muted);">OpenAI</div>
+      </div>
+      <div class="ai-provider-card" id="prov-gemini" onclick="selectProvider('gemini')">
+        <div style="font-size:22px;margin-bottom:6px;">🔵</div>
+        <div style="font-size:12px;font-weight:700;">Gemini</div>
+        <div style="font-size:10px;color:var(--text-muted);">Google</div>
+      </div>
+      <div class="ai-provider-card" id="prov-copilot" onclick="selectProvider('copilot')">
+        <div style="font-size:22px;margin-bottom:6px;">🟣</div>
+        <div style="font-size:12px;font-weight:700;">Copilot</div>
+        <div style="font-size:10px;color:var(--text-muted);">Microsoft</div>
+      </div>
+    </div>
+
+    <!-- API Key setup (collapsible) -->
+    <div class="card" style="padding:16px;margin-bottom:16px;" id="api-key-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;" onclick="toggleApiKey()">
+        <div style="font-size:13px;font-weight:600;">🔑 API Açarı (<span id="current-provider-label">Claude</span>)</div>
+        <span id="api-key-toggle-icon">▼</span>
+      </div>
+      <div id="api-key-body" style="margin-top:14px;">
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;">
+          <input class="form-input" type="password" id="api-key-input" placeholder="sk-ant-... və ya AIza... və ya sk-..."/>
+          <button class="btn btn-primary btn-sm" onclick="saveApiKey()">Saxla</button>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="api-key-hint">
+          Claude üçün: console.anthropic.com → API Keys
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <div style="font-size:11px;color:var(--text-muted);">Dil:</div>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:12px;">
+            <input type="radio" name="ai-lang" value="az" checked/> Azərbaycan
+          </label>
+          <label style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:12px;">
+            <input type="radio" name="ai-lang" value="en"/> English
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick prompts -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+      <button class="btn btn-secondary btn-sm" onclick="quickPrompt('lesson_plan')">📚 Dərs Planı</button>
+      <button class="btn btn-secondary btn-sm" onclick="quickPrompt('questions')">❓ Sual Yarat</button>
+      <button class="btn btn-secondary btn-sm" onclick="quickPrompt('analyze')">📊 Tələbə Analizi</button>
+      <button class="btn btn-secondary btn-sm" onclick="quickPrompt('homework')">📝 Ev Tapşırığı</button>
+      <button class="btn btn-secondary btn-sm" onclick="quickPrompt('report')">📋 Hesabat</button>
+      <button class="btn btn-secondary btn-sm" onclick="quickPrompt('explain')">💡 İzah Et</button>
+    </div>
+
+    <!-- Chat area -->
+    <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px;margin-bottom:14px;padding:4px;" id="chat-messages">
+      <div class="ai-bubble assistant" style="max-width:90%;">
+        <div style="font-size:11px;font-weight:700;color:var(--blue-bright);margin-bottom:6px;">🤖 Claude (Anthropic)</div>
+        Salam! Mən Mentorix AI Copilotam. Sizə necə kömək edə bilərəm?<br><br>
+        Məsələn:<br>
+        • "10 riyaziyyat sualı yarat — cəbr mövzusunda"<br>
+        • "Günel Quliyevanın proqresini analiz et"<br>
+        • "Bu həftə üçün dərs planı hazırla"
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div style="display:flex;gap:8px;">
+      <textarea class="form-input" id="chat-input" rows="2" placeholder="Sualınızı yazın... (Enter ilə göndər, Shift+Enter yeni sətir)" style="flex:1;resize:none;" onkeydown="handleChatKey(event)"></textarea>
+      <button class="btn btn-purple" onclick="sendMessage()" style="align-self:flex-end;padding:12px 20px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Göndər
+      </button>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<!-- EXAM TAKING MODAL (fullscreen) -->
+<div class="modal-overlay" id="exam-modal" style="padding:0;align-items:stretch;">
+  <div style="width:100%;height:100%;background:var(--indigo-950);display:flex;flex-direction:column;overflow:hidden;" class="grid-bg">
+    <!-- Exam header -->
+    <div style="background:var(--surface-1);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:16px;">
+      <div style="flex:1;">
+        <div class="syne" style="font-size:16px;font-weight:700;" id="taking-exam-title">İmtahan</div>
+        <div style="font-size:12px;color:var(--text-muted);" id="taking-exam-subject"></div>
+      </div>
+
+      <!-- Progress -->
+      <div style="flex:1;max-width:300px;">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px;">
+          <span style="color:var(--text-muted);">Proqres</span>
+          <span id="q-progress-label" style="color:var(--blue-bright);font-weight:600;"></span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="q-progress-bar" style="background:var(--blue-electric);width:0%;"></div></div>
+      </div>
+
+      <!-- Countdown timer -->
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="countdown-ring" id="timer-ring">
+          <svg class="countdown-svg" width="64" height="64" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="28" stroke="var(--surface-3)" stroke-width="4" fill="none"/>
+            <circle class="countdown-circle" id="timer-circle" cx="32" cy="32" r="28" stroke="var(--blue-electric)" stroke-width="4" fill="none"
+              stroke-dasharray="175.9" stroke-dashoffset="0"/>
+          </svg>
+          <div style="position:absolute;text-align:center;">
+            <div class="syne" style="font-size:13px;font-weight:800;" id="timer-display">60:00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Warning bar -->
+    <div id="warning-bar" style="display:none;padding:10px 24px;text-align:center;font-weight:700;font-size:13px;"></div>
+
+    <!-- Exam body -->
+    <div style="flex:1;overflow-y:auto;padding:24px;">
+      <div style="max-width:720px;margin:0 auto;">
+        <div id="exam-question-area"></div>
+      </div>
+    </div>
+
+    <!-- Exam footer -->
+    <div style="background:var(--surface-1);border-top:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;">
+      <button class="btn btn-secondary" id="prev-q-btn" onclick="prevQuestion()" style="display:none;">← Əvvəlki</button>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;max-width:400px;" id="q-nav-dots"></div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-secondary" id="next-q-btn" onclick="nextQuestion()">Növbəti →</button>
+        <button class="btn btn-danger" id="submit-exam-btn" onclick="submitExam()" style="display:none;">✅ Təqdim Et</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EXAM RESULT MODAL -->
+<div class="modal-overlay" id="result-modal">
+  <div class="modal-box" style="max-width:560px;text-align:center;">
+    <div style="font-size:64px;margin-bottom:16px;" id="result-emoji">🎉</div>
+    <div class="syne" style="font-size:24px;font-weight:800;margin-bottom:8px;">İmtahan Tamamlandı!</div>
+    <div style="font-size:13px;color:var(--text-muted);margin-bottom:24px;" id="result-subtitle"></div>
+
+    <!-- Score ring -->
+    <div class="score-ring-wrap" style="margin:0 auto 24px;">
+      <svg width="140" height="140" viewBox="0 0 140 140">
+        <circle cx="70" cy="70" r="60" stroke="var(--surface-3)" stroke-width="8" fill="none"/>
+        <circle cx="70" cy="70" r="60" id="score-ring-circle"
+          stroke="#10b981" stroke-width="8" fill="none"
+          stroke-dasharray="376.8" stroke-dashoffset="376.8"
+          stroke-linecap="round"
+          transform="rotate(-90 70 70)"
+          style="transition:stroke-dashoffset 1.5s ease;"/>
+      </svg>
+      <div style="position:absolute;text-align:center;">
+        <div class="syne" style="font-size:36px;font-weight:800;" id="result-score">0%</div>
+        <div style="font-size:11px;color:var(--text-muted);">xam bal</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;" id="result-stats"></div>
+
+    <div style="background:var(--surface-3);border-radius:12px;padding:16px;margin-bottom:20px;font-size:12px;color:var(--text-muted);text-align:left;" id="result-breakdown"></div>
+
+    <div style="display:flex;gap:8px;justify-content:center;">
+      <button class="btn btn-secondary" onclick="closeModal('result-modal')">Bağla</button>
+      <button class="btn btn-primary" onclick="reviewAnswers()">Cavabları Yoxla</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const mockStudents = [
+  {id:'u4',name:'Günel Quliyeva'},
+  {id:'u5',name:'Tural İsmayılov'},
+  {id:'u7',name:'Aytən Hüseynova'},
+  {id:'u8',name:'Elçin Babayev'},
+];
+
+let exams = [
+  {
+    id:'ex1', title:'Riyaziyyat Yarımillik', subject:'Riyaziyyat',
+    start: new Date(Date.now() + 2*60*60*1000).toISOString(), // 2 saat sonra
+    duration: 60, status:'upcoming',
+    warn1: 10, warn2: 2,
+    warn1_msg:'⚠️ Diqqət! İmtahanın bitməsinə {N} dəqiqə qalıb.',
+    warn2_msg:'🔴 Kritik! İmtahanın bitməsinə {N} dəqiqə qalıb!',
+    question_format:'manual',
+    shuffle:true, goback:true, autosubmit:true, showresult:true,
+    questions:[
+      {id:'q1',type:'closed',text:'2x + 5 = 11 tənliyinin həlli nədir?',options:['A) x = 2','B) x = 3','C) x = 4','D) x = 5'],correct:'B',points:25},
+      {id:'q2',type:'closed',text:'Kvadratın sahəsi hansı düsturla hesablanır?',options:['A) a × b','B) a²','C) 2(a+b)','D) πr²'],correct:'B',points:25},
+      {id:'q3',type:'open',text:'Pifaqor teoremini izah edin və bir nümunə verin.',points:25},
+      {id:'q4',type:'closed',text:'log₂(8) = ?',options:['A) 2','B) 3','C) 4','D) 6'],correct:'B',points:25},
+    ],
+    students:['u4','u5'],
+  },
+  {
+    id:'ex2', title:'Cəbr Testi', subject:'Riyaziyyat',
+    start: new Date(Date.now() - 24*60*60*1000).toISOString(), // dünən
+    duration: 45, status:'completed',
+    warn1:5, warn2:1, question_format:'manual',
+    questions:[
+      {id:'q1',type:'closed',text:'(a+b)² = ?',options:['A) a²+b²','B) a²+2ab+b²','C) a²-b²','D) 2a+2b'],correct:'B',points:50},
+      {id:'q2',type:'closed',text:'x² - 4 = 0 tənliyinin kökləri?',options:['A) ±1','B) ±2','C) ±3','D) ±4'],correct:'B',points:50},
+    ],
+    students:['u4','u5','u7'],
+    results:[
+      {student_id:'u4',student_name:'Günel Quliyeva',raw_score:75,final_score:70,correct:1,wrong:1,open_score:20,time_spent:38},
+      {student_id:'u5',student_name:'Tural İsmayılov',raw_score:100,final_score:100,correct:2,wrong:0,open_score:0,time_spent:25},
+    ]
+  }
+];
+
+let currentStep = 1;
+let questionFormat = 'manual';
+let questionsList = [];
+let questionCount = 0;
+let currentExam = null;
+let currentQuestionIndex = 0;
+let studentAnswers = {};
+let examTimer = null;
+let examEndTime = null;
+let totalSeconds = 0;
+let initialSeconds = 0;
+let warn1Fired = false;
+let warn2Fired = false;
+let currentProvider = 'claude';
+let chatHistory = [];
+let apiKeys = {};
+let aiLanguage = 'az';
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('mx_user');
+  if (saved) {
+    const u = JSON.parse(saved);
+    document.getElementById('sb-avatar').textContent = u.full_name.split(' ').map(n=>n[0]).join('').substring(0,2);
+    document.getElementById('sb-name').textContent = u.full_name;
+    document.getElementById('sb-role').textContent = {admin:'Admin',instructor:'Müəllim',student:'Tələbə',parent:'Valideyn'}[u.role]||u.role;
+  }
+
+  // Populate student select
+  const sel = document.getElementById('ex-students');
+  mockStudents.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.id; opt.textContent = s.name;
+    sel.appendChild(opt);
+  });
+
+  // Set default datetime
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('ex-start').value = now.toISOString().slice(0,16);
+
+  loadApiKeys();
+  showPage('exams');
+});
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  const pageEl = document.getElementById('page-'+page);
+  if (pageEl) {
+    pageEl.classList.add('active');
+    if (page === 'copilot') pageEl.style.display = 'flex';
+    else pageEl.style.display = '';
+  }
+
+  const navEl = document.getElementById('nav-'+page);
+  if (navEl) navEl.classList.add('active');
+
+  const titles = {exams:'İmtahanlar', create:'Yeni İmtahan', results:'Nəticələr', copilot:'AI Copilot'};
+  document.getElementById('page-title').textContent = titles[page]||'';
+
+  if (page === 'exams') renderExams('upcoming');
+  if (page === 'results') renderResults();
+}
+
+// ============================================================
+// EXAM LIST
+// ============================================================
+function filterExams(filter) {
+  ['upcoming','active','completed','all'].forEach(f => {
+    document.getElementById('etab-'+f)?.classList.toggle('active', f===filter);
+  });
+  renderExams(filter);
+}
+
+function renderExams(filter) {
+  let list = filter === 'all' ? exams : exams.filter(e => e.status === filter);
+  const grid = document.getElementById('exams-grid');
+
+  grid.innerHTML = list.map(e => {
+    const startDate = new Date(e.start);
+    const isPast = startDate < new Date();
+    const statusColors = {upcoming:'badge-blue', active:'badge-green', completed:'badge-gold', draft:'badge-red'};
+    const statusLabels = {upcoming:'Gələcək', active:'🟢 Aktiv', completed:'✅ Tamamlandı', draft:'📝 Qaralama'};
+
+    return `
+      <div class="card" style="padding:20px;cursor:pointer;transition:all 0.2s;" onmouseenter="this.style.borderColor='rgba(99,102,241,0.4)'" onmouseleave="this.style.borderColor='var(--border)'">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+          <div>
+            <div class="syne" style="font-size:15px;font-weight:700;margin-bottom:4px;">${e.title}</div>
+            <div style="font-size:12px;color:var(--text-muted);">${e.subject||'—'}</div>
+          </div>
+          <span class="badge ${statusColors[e.status]||'badge-blue'}">${statusLabels[e.status]||e.status}</span>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;margin-bottom:14px;">
+          <div style="background:var(--surface-3);border-radius:8px;padding:10px;">
+            <div style="color:var(--text-muted);margin-bottom:2px;">📅 Başlanğıc</div>
+            <div style="font-weight:600;">${startDate.toLocaleDateString('az-AZ')} ${startDate.toLocaleTimeString('az-AZ',{hour:'2-digit',minute:'2-digit'})}</div>
+          </div>
+          <div style="background:var(--surface-3);border-radius:8px;padding:10px;">
+            <div style="color:var(--text-muted);margin-bottom:2px;">⏱ Müddət</div>
+            <div style="font-weight:600;">${e.duration} dəqiqə</div>
+          </div>
+          <div style="background:var(--surface-3);border-radius:8px;padding:10px;">
+            <div style="color:var(--text-muted);margin-bottom:2px;">❓ Suallar</div>
+            <div style="font-weight:600;">${e.questions?.length||0} sual</div>
+          </div>
+          <div style="background:var(--surface-3);border-radius:8px;padding:10px;">
+            <div style="color:var(--text-muted);margin-bottom:2px;">👥 Tələbə</div>
+            <div style="font-weight:600;">${e.students?.length||0} nəfər</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;">
+          ${e.status==='upcoming'||e.status==='active' ? `<button class="btn btn-primary btn-sm" onclick="startExam('${e.id}')">▶️ Başlat</button>` : ''}
+          ${e.status==='completed' ? `<button class="btn btn-secondary btn-sm" onclick="viewResults('${e.id}')">📊 Nəticələr</button>` : ''}
+          <button class="btn btn-ghost btn-sm" onclick="editExam('${e.id}')">✏️ Düzəlt</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteExam('${e.id}')">🗑</button>
+        </div>
+      </div>
+    `;
+  }).join('') || '<div style="text-align:center;padding:60px;color:var(--text-muted);grid-column:1/-1;">Bu kateqoriyada imtahan yoxdur</div>';
+}
+
+// ============================================================
+// CREATE EXAM — STEPS
+// ============================================================
+function goStep(n) {
+  currentStep = n;
+  [1,2,3,4].forEach(i => {
+    document.getElementById('step-'+i).style.display = i===n ? 'block' : 'none';
+    const stepEl = document.querySelector(`.step-item[data-step="${i}"]`);
+    if (stepEl) {
+      stepEl.style.borderBottomColor = i===n ? 'var(--blue-electric)' : (i<n ? 'var(--neon-emerald)' : 'var(--border)');
+      stepEl.querySelector('div').style.color = i===n ? 'var(--blue-bright)' : (i<n ? '#34d399' : 'var(--text-muted)');
+    }
+  });
+  if (n===4) buildExamSummary();
+}
+
+function setQuestionFormat(fmt) {
+  questionFormat = fmt;
+  document.getElementById('fmt-manual').style.borderColor = fmt==='manual' ? 'var(--purple)' : 'var(--border)';
+  document.getElementById('fmt-pdf').style.borderColor = fmt==='pdf' ? 'var(--purple)' : 'var(--border)';
+}
+
+function addQuestion(type) {
+  questionCount++;
+  const qId = 'q_'+questionCount;
+  questionsList.push({id:qId, type, text:'', options:['','','','',''], correct:'A', points:0});
+  updateQCount();
+
+  const container = document.getElementById('questions-container');
+  const div = document.createElement('div');
+  div.id = 'qcard-'+qId;
+  div.className = 'question-card';
+
+  if (type === 'closed') {
+    div.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="background:rgba(59,130,246,0.15);border-radius:8px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--blue-bright);">QAPALÍ #${questionCount}</div>
+        <div style="flex:1;height:1px;background:var(--border);"></div>
+        <div style="font-size:12px;color:var(--text-muted);">Bal: <strong id="pts-${qId}" style="color:#fbbf24;">0</strong></div>
+        <button class="btn btn-danger btn-sm" onclick="removeQuestion('${qId}')">✕</button>
+      </div>
+      <div style="margin-bottom:12px;">
+        <label class="form-label">Sualın mətni</label>
+        <textarea class="form-input" rows="2" placeholder="Sualı daxil edin..." id="qt-${qId}" oninput="updateQuestion('${qId}','text',this.value)"></textarea>
+      </div>
+      <div style="display:grid;gap:8px;margin-bottom:12px;">
+        ${['A','B','C','D','E'].map((opt,i) => `
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:28px;height:28px;border-radius:8px;background:rgba(99,102,241,0.15);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#a5b4fc;flex-shrink:0;">${opt}</div>
+            <input class="form-input" placeholder="${opt} seçimi..." id="qo-${qId}-${i}" oninput="updateOption('${qId}',${i},this.value)" style="flex:1;"/>
+          </div>
+        `).join('')}
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <label class="form-label" style="margin:0;">Düzgün cavab:</label>
+        <select class="form-input" style="width:80px;" onchange="updateQuestion('${qId}','correct',this.value)">
+          ${['A','B','C','D','E'].map(o=>`<option value="${o}">${o}</option>`).join('')}
+        </select>
+        <div style="color:var(--text-muted);font-size:12px;margin-left:auto;">Hər 4 səhv = 1 düzgün bal silinir</div>
+      </div>
+    `;
+  } else {
+    div.innerHTML = `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="background:rgba(16,185,129,0.15);border-radius:8px;padding:4px 12px;font-size:11px;font-weight:700;color:#34d399;">AÇIQ #${questionCount}</div>
+        <div style="flex:1;height:1px;background:var(--border);"></div>
+        <div style="font-size:12px;color:var(--text-muted);">Bal: <strong id="pts-${qId}" style="color:#fbbf24;">0</strong></div>
+        <button class="btn btn-danger btn-sm" onclick="removeQuestion('${qId}')">✕</button>
+      </div>
+      <div style="margin-bottom:12px;">
+        <label class="form-label">Sualın mətni</label>
+        <textarea class="form-input" rows="2" placeholder="Açıq sualı daxil edin..." id="qt-${qId}" oninput="updateQuestion('${qId}','text',this.value)"></textarea>
+      </div>
+      <div style="background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:10px;padding:12px;font-size:12px;color:#34d399;">
+        ℹ️ Açıq suallar müəllim tərəfindən əl ilə qiymətləndirilir
+      </div>
+    `;
+  }
+  container.appendChild(div);
+  updateBalances();
+}
+
+function removeQuestion(qId) {
+  questionsList = questionsList.filter(q=>q.id!==qId);
+  document.getElementById('qcard-'+qId)?.remove();
+  updateQCount();
+  updateBalances();
+}
+
+function updateQuestion(qId, field, value) {
+  const q = questionsList.find(q=>q.id===qId);
+  if (q) q[field] = value;
+}
+
+function updateOption(qId, idx, value) {
+  const q = questionsList.find(q=>q.id===qId);
+  if (q) q.options[idx] = value;
+}
+
+function updateQCount() {
+  document.getElementById('q-count').textContent = questionsList.length;
+  updateBalances();
+}
+
+function updateBalances() {
+  if (questionsList.length === 0) return;
+  const pointsPer = Math.round(100 / questionsList.length);
+  questionsList.forEach(q => {
+    q.points = pointsPer;
+    const el = document.getElementById('pts-'+q.id);
+    if (el) el.textContent = pointsPer;
+  });
+}
+
+// PDF answers
+function generatePdfAnswers() {
+  const count = parseInt(document.getElementById('pdf-q-count').value)||0;
+  if (!count || count > 100) { alert('1-100 arası sual sayı daxil edin'); return; }
+
+  const container = document.getElementById('pdf-answers-container');
+  container.innerHTML = Array.from({length:count},(_,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;background:var(--surface-3);border-radius:10px;padding:10px 14px;">
+      <div style="width:32px;font-weight:700;font-family:'Syne',sans-serif;color:var(--blue-bright);">${i+1}.</div>
+      <select class="form-input" id="pdf-type-${i}" style="width:110px;" onchange="togglePdfAnswer(${i})">
+        <option value="closed">Qapalı</option>
+        <option value="open">Açıq</option>
+      </select>
+      <div id="pdf-closed-${i}" style="display:flex;gap:6px;flex:1;">
+        ${['A','B','C','D','E'].map(o=>`
+          <label style="display:flex;align-items:center;gap:3px;cursor:pointer;font-size:12px;">
+            <input type="radio" name="pdf-ans-${i}" value="${o}"/> ${o}
+          </label>
+        `).join('')}
+      </div>
+      <div id="pdf-open-${i}" style="display:none;flex:1;">
+        <input class="form-input" style="font-size:12px;" placeholder="Model cavab (ixtiyari)"/>
+      </div>
+    </div>
+  `).join('');
+}
+
+function togglePdfAnswer(i) {
+  const type = document.getElementById('pdf-type-'+i).value;
+  document.getElementById('pdf-closed-'+i).style.display = type==='closed'?'flex':'none';
+  document.getElementById('pdf-open-'+i).style.display = type==='open'?'block':'none';
+}
+
+function onPdfSelected(input) {
+  if (input.files[0]) {
+    document.getElementById('pdf-uploaded-info').textContent = '✓ ' + input.files[0].name;
+    document.getElementById('pdf-uploaded-info').style.display = 'block';
+    document.getElementById('pdf-upload-text').style.display = 'none';
+  }
+}
+
+function handlePdfDrop(event) {
+  event.preventDefault();
+  const file = event.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') {
+    document.getElementById('pdf-uploaded-info').textContent = '✓ ' + file.name;
+    document.getElementById('pdf-uploaded-info').style.display = 'block';
+    document.getElementById('pdf-upload-text').style.display = 'none';
+  }
+}
+
+// Step 2 visibility based on format
+document.addEventListener('DOMContentLoaded', () => {});
+function goStep2WithFormat() {
+  document.getElementById('manual-q-section').style.display = questionFormat==='manual'?'block':'none';
+  document.getElementById('pdf-q-section').style.display = questionFormat==='pdf'?'block':'none';
+}
+
+// Override goStep for step 2
+const _origGoStep = goStep;
+
+function buildExamSummary() {
+  const title = document.getElementById('ex-title').value || 'Adsız';
+  const subject = document.getElementById('ex-subject').value || '—';
+  const start = document.getElementById('ex-start').value;
+  const duration = document.getElementById('ex-duration').value;
+  const warn1 = document.getElementById('ex-warn1').value;
+  const warn2 = document.getElementById('ex-warn2').value;
+  const qCount = questionsList.length;
+  const closedCount = questionsList.filter(q=>q.type==='closed').length;
+  const openCount = questionsList.filter(q=>q.type==='open').length;
+
+  document.getElementById('exam-summary').innerHTML = `
+    <div style="display:grid;gap:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div style="background:var(--surface-3);border-radius:10px;padding:14px;">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">İmtahan adı</div>
+          <div style="font-weight:700;">${title}</div>
+        </div>
+        <div style="background:var(--surface-3);border-radius:10px;padding:14px;">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">Fənn</div>
+          <div style="font-weight:700;">${subject}</div>
+        </div>
+        <div style="background:var(--surface-3);border-radius:10px;padding:14px;">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">Başlama</div>
+          <div style="font-weight:700;">${start ? new Date(start).toLocaleString('az-AZ') : '—'}</div>
+        </div>
+        <div style="background:var(--surface-3);border-radius:10px;padding:14px;">
+          <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">Müddət</div>
+          <div style="font-weight:700;">${duration} dəqiqə</div>
+        </div>
+      </div>
+      <div style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:14px;">
+        <div style="display:flex;gap:20px;font-size:13px;">
+          <span>❓ Cəmi: <strong>${qCount} sual</strong></span>
+          <span>🔒 Qapalı: <strong>${closedCount}</strong></span>
+          <span>📝 Açıq: <strong>${openCount}</strong></span>
+          <span>⚠️ Xəbərdarlıq: <strong>${warn1} dəq & ${warn2} dəq</strong></span>
+        </div>
+      </div>
+      <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:14px;font-size:12px;">
+        <strong style="color:#fbbf24;">Bal sistemi:</strong> Hər sual ${qCount>0?Math.round(100/qCount):0} bal dəyərindədir. 
+        Qapalı suallarda hər 4 səhv cavab 1 düzgün sualın balını silir.
+      </div>
+    </div>
+  `;
+}
+
+function saveExam(status) {
+  const newExam = {
+    id: 'ex'+Date.now(),
+    title: document.getElementById('ex-title').value || 'Adsız İmtahan',
+    subject: document.getElementById('ex-subject').value,
+    start: document.getElementById('ex-start').value,
+    duration: parseInt(document.getElementById('ex-duration').value)||60,
+    warn1: parseInt(document.getElementById('ex-warn1').value)||10,
+    warn2: parseInt(document.getElementById('ex-warn2').value)||2,
+    warn1_msg: document.getElementById('warn1-msg').value,
+    warn2_msg: document.getElementById('warn2-msg').value,
+    question_format: questionFormat,
+    shuffle: document.getElementById('opt-shuffle').checked,
+    goback: document.getElementById('opt-goback').checked,
+    autosubmit: document.getElementById('opt-autosubmit').checked,
+    showresult: document.getElementById('opt-showresult').checked,
+    questions: questionsList.map(q=>({...q})),
+    students: Array.from(document.getElementById('ex-students').selectedOptions).map(o=>o.value),
+    status: status === 'draft' ? 'draft' : new Date(document.getElementById('ex-start').value) > new Date() ? 'upcoming' : 'active',
+  };
+  exams.unshift(newExam);
+  showToast(status==='draft' ? '📝 Qaralama saxlandı' : '🚀 İmtahan planlandı!');
+  questionsList = []; questionCount = 0;
+  document.getElementById('questions-container').innerHTML = '';
+  updateQCount();
+  showPage('exams');
+}
+
+// ============================================================
+// START EXAM (Student takes it)
+// ============================================================
+function startExam(examId) {
+  currentExam = exams.find(e=>e.id===examId);
+  if (!currentExam) return;
+
+  currentQuestionIndex = 0;
+  studentAnswers = {};
+  warn1Fired = false;
+  warn2Fired = false;
+
+  // Shuffle if needed
+  let questions = [...currentExam.questions];
+  if (currentExam.shuffle) questions = questions.sort(()=>Math.random()-0.5);
+  currentExam._questions = questions;
+
+  document.getElementById('taking-exam-title').textContent = currentExam.title;
+  document.getElementById('taking-exam-subject').textContent = currentExam.subject || '';
+
+  showModal('exam-modal');
+  renderQuestion();
+  startTimer();
+}
+
+function renderQuestion() {
+  const questions = currentExam._questions || currentExam.questions;
+  const total = questions.length;
+  const q = questions[currentQuestionIndex];
+
+  // Progress
+  document.getElementById('q-progress-label').textContent = `${currentQuestionIndex+1} / ${total}`;
+  document.getElementById('q-progress-bar').style.width = ((currentQuestionIndex+1)/total*100)+'%';
+
+  // Nav dots
+  document.getElementById('q-nav-dots').innerHTML = questions.map((_,i)=>`
+    <div onclick="jumpToQuestion(${i})" style="width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.2s;
+      background:${i===currentQuestionIndex?'var(--blue-electric)':studentAnswers[questions[i].id]!==undefined?'rgba(16,185,129,0.3)':'var(--surface-3)'};
+      color:${i===currentQuestionIndex?'white':studentAnswers[questions[i].id]!==undefined?'#34d399':'var(--text-muted)'};
+      border:1px solid ${i===currentQuestionIndex?'var(--blue-electric)':studentAnswers[questions[i].id]!==undefined?'rgba(16,185,129,0.4)':'var(--border)'};
+    ">${i+1}</div>
+  `).join('');
+
+  // Prev/next buttons
+  document.getElementById('prev-q-btn').style.display = currentExam.goback && currentQuestionIndex>0 ? 'flex' : 'none';
+  document.getElementById('next-q-btn').style.display = currentQuestionIndex < total-1 ? 'flex' : 'none';
+  document.getElementById('submit-exam-btn').style.display = currentQuestionIndex === total-1 ? 'flex' : 'none';
+
+  // Question content
+  const area = document.getElementById('exam-question-area');
+  const pointsEach = Math.round(100/total);
+
+  if (q.type === 'closed') {
+    const savedAnswer = studentAnswers[q.id];
+    area.innerHTML = `
+      <div style="margin-bottom:8px;display:flex;align-items:center;gap:8px;">
+        <span class="badge badge-blue">Qapalı Sual</span>
+        <span style="font-size:12px;color:var(--text-muted);">${pointsEach} bal</span>
+        <span style="font-size:11px;color:var(--text-muted);margin-left:auto;">Hər 4 səhv = 1 düzgün silinir</span>
+      </div>
+      <div class="syne" style="font-size:18px;font-weight:700;margin-bottom:24px;line-height:1.4;">${currentQuestionIndex+1}. ${q.text}</div>
+      <div style="display:grid;gap:10px;">
+        ${(q.options||[]).filter(o=>o).map((opt,i)=>{
+          const letter = ['A','B','C','D','E'][i];
+          const isSelected = savedAnswer === letter;
+          return `
+            <button class="option-btn ${isSelected?'selected':''}" id="opt-${letter}" onclick="selectAnswer('${q.id}','${letter}')">
+              <div style="width:30px;height:30px;border-radius:8px;background:${isSelected?'var(--blue-electric)':'rgba(99,102,241,0.15)'};display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:${isSelected?'white':'#a5b4fc'};flex-shrink:0;">${letter}</div>
+              <span>${opt}</span>
+            </button>
+          `;
+        }).join('')}
+      </div>
+    `;
+  } else {
+    const savedAnswer = studentAnswers[q.id] || '';
+    area.innerHTML = `
+      <div style="margin-bottom:8px;display:flex;align-items:center;gap:8px;">
+        <span class="badge badge-green">Açıq Sual</span>
+        <span style="font-size:12px;color:var(--text-muted);">${pointsEach} bal</span>
+      </div>
+      <div class="syne" style="font-size:18px;font-weight:700;margin-bottom:24px;line-height:1.4;">${currentQuestionIndex+1}. ${q.text}</div>
+      <div>
+        <label class="form-label">Cavabınız</label>
+        <textarea class="form-input" rows="8" placeholder="Cavabınızı ətraflı yazın..." id="open-answer" oninput="selectAnswer('${q.id}',this.value)" style="font-size:14px;">${savedAnswer}</textarea>
+        <div style="text-align:right;font-size:11px;color:var(--text-muted);margin-top:6px;" id="char-count">${savedAnswer.length} simvol</div>
+      </div>
+    `;
+    document.getElementById('open-answer')?.addEventListener('input', function() {
+      document.getElementById('char-count').textContent = this.value.length + ' simvol';
+    });
+  }
+}
+
+function selectAnswer(qId, value) {
+  studentAnswers[qId] = value;
+  renderQuestion(); // re-render to show selection
+}
+
+function jumpToQuestion(i) {
+  currentQuestionIndex = i;
+  renderQuestion();
+}
+
+function prevQuestion() {
+  if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuestion(); }
+}
+
+function nextQuestion() {
+  const questions = currentExam._questions || currentExam.questions;
+  if (currentQuestionIndex < questions.length-1) { currentQuestionIndex++; renderQuestion(); }
+}
+
+// ============================================================
+// TIMER
+// ============================================================
+function startTimer() {
+  const durationMs = currentExam.duration * 60 * 1000;
+  examEndTime = Date.now() + durationMs;
+  initialSeconds = currentExam.duration * 60;
+  totalSeconds = initialSeconds;
+
+  clearInterval(examTimer);
+  examTimer = setInterval(tickTimer, 1000);
+  tickTimer();
+}
+
+function tickTimer() {
+  const remaining = Math.max(0, Math.floor((examEndTime - Date.now()) / 1000));
+  totalSeconds = remaining;
+  const mins = Math.floor(remaining / 60);
+  const secs = remaining % 60;
+  const display = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+
+  document.getElementById('timer-display').textContent = display;
+
+  // Color change
+  const pct = remaining / initialSeconds;
+  const color = pct > 0.5 ? '#3b82f6' : pct > 0.25 ? '#f59e0b' : '#ef4444';
+  document.getElementById('timer-circle').style.stroke = color;
+  document.getElementById('timer-display').style.color = pct < 0.25 ? '#f87171' : 'var(--text-primary)';
+
+  // SVG ring
+  const circumference = 175.9;
+  const offset = circumference * (1 - pct);
+  document.getElementById('timer-circle').style.strokeDashoffset = offset;
+
+  // Warnings
+  const warn1Secs = currentExam.warn1 * 60;
+  const warn2Secs = currentExam.warn2 * 60;
+
+  if (!warn1Fired && remaining <= warn1Secs && remaining > warn2Secs) {
+    warn1Fired = true;
+    showWarning(currentExam.warn1_msg.replace('{N}', currentExam.warn1), 'warning');
+  }
+  if (!warn2Fired && remaining <= warn2Secs && remaining > 0) {
+    warn2Fired = true;
+    showWarning(currentExam.warn2_msg.replace('{N}', currentExam.warn2), 'danger');
+  }
+
+  // Auto submit
+  if (remaining === 0) {
+    clearInterval(examTimer);
+    if (currentExam.autosubmit) submitExam();
+  }
+}
+
+function showWarning(msg, level) {
+  const bar = document.getElementById('warning-bar');
+  bar.style.display = 'block';
+  bar.style.background = level==='danger' ? 'rgba(239,68,68,0.25)' : 'rgba(245,158,11,0.2)';
+  bar.style.color = level==='danger' ? '#f87171' : '#fbbf24';
+  bar.style.borderBottom = `1px solid ${level==='danger'?'rgba(239,68,68,0.4)':'rgba(245,158,11,0.3)'}`;
+  bar.textContent = msg;
+  if (level==='danger') bar.classList.add('warning-flash');
+
+  // Shake the timer
+  document.getElementById('timer-ring').style.animation = 'none';
+  setTimeout(() => bar.style.display = level==='warning' ? 'block' : 'block', 0);
+}
+
+// ============================================================
+// SUBMIT EXAM & SCORE CALCULATION
+// ============================================================
+function submitExam() {
+  clearInterval(examTimer);
+
+  const questions = currentExam._questions || currentExam.questions;
+  const total = questions.length;
+  const pointsEach = 100 / total;
+
+  let correctCount = 0;
+  let wrongCount = 0;
+  let openCount = 0;
+  let answeredCount = 0;
+
+  questions.forEach(q => {
+    if (q.type === 'closed') {
+      const ans = studentAnswers[q.id];
+      if (ans === undefined) return;
+      answeredCount++;
+      if (ans === q.correct) correctCount++;
+      else wrongCount++;
+    } else {
+      if (studentAnswers[q.id]) {
+        openCount++;
+        answeredCount++;
+      }
+    }
+  });
+
+  // Penalty: every 4 wrong = -1 correct's worth
+  const penalty = Math.floor(wrongCount / 4);
+  const netCorrect = Math.max(0, correctCount - penalty);
+  const closedQ = questions.filter(q=>q.type==='closed').length;
+  const openQ = questions.filter(q=>q.type==='open').length;
+  const closedPoints = closedQ > 0 ? (netCorrect / closedQ) * (closedQ * pointsEach) : 0;
+  const rawScore = Math.round(closedPoints);
+  const timeSpent = Math.round((initialSeconds - totalSeconds) / 60);
+
+  closeModal('exam-modal');
+
+  // Show result
+  const pct = rawScore;
+  const emoji = pct>=90?'🏆':pct>=75?'🎓':pct>=60?'⭐':pct>=40?'📚':'💪';
+  document.getElementById('result-emoji').textContent = emoji;
+  document.getElementById('result-score').textContent = pct+'%';
+  document.getElementById('result-subtitle').textContent =
+    pct>=90?'Əla nəticə!':pct>=75?'Yaxşı nəticə':pct>=60?'Kafi nəticə':'Daha çox çalışmaq lazımdır';
+
+  // Animate score ring
+  setTimeout(() => {
+    const circle = document.getElementById('score-ring-circle');
+    const offset = 376.8 * (1 - pct/100);
+    circle.style.strokeDashoffset = offset;
+    circle.style.stroke = pct>=75?'#10b981':pct>=50?'#f59e0b':'#ef4444';
+  }, 300);
+
+  document.getElementById('result-stats').innerHTML = `
+    <div style="background:var(--surface-3);border-radius:10px;padding:12px;text-align:center;">
+      <div class="syne" style="font-size:22px;font-weight:800;color:#34d399;">${correctCount}</div>
+      <div style="font-size:11px;color:var(--text-muted);">Düzgün</div>
+    </div>
+    <div style="background:var(--surface-3);border-radius:10px;padding:12px;text-align:center;">
+      <div class="syne" style="font-size:22px;font-weight:800;color:#f87171;">${wrongCount}</div>
+      <div style="font-size:11px;color:var(--text-muted);">Səhv</div>
+    </div>
+    <div style="background:var(--surface-3);border-radius:10px;padding:12px;text-align:center;">
+      <div class="syne" style="font-size:22px;font-weight:800;color:#fbbf24;">${timeSpent}</div>
+      <div style="font-size:11px;color:var(--text-muted);">Dəqiqə</div>
+    </div>
+  `;
+
+  document.getElementById('result-breakdown').innerHTML = `
+    <div style="font-weight:700;margin-bottom:8px;color:var(--text-primary);">Bal Hesablaması:</div>
+    <div style="display:grid;gap:4px;">
+      <div>✅ Düzgün cavablar: <strong>${correctCount} × ${Math.round(pointsEach)} = ${Math.round(correctCount*pointsEach)} bal</strong></div>
+      <div>❌ Cərimə (${wrongCount} səhv ÷ 4 = ${penalty}): <strong>-${Math.round(penalty*pointsEach)} bal</strong></div>
+      ${openQ>0?`<div>📝 Açıq suallar: <strong>Müəllim qiymətləndirir</strong></div>`:''}
+      <div style="border-top:1px solid var(--border);margin-top:6px;padding-top:6px;">🏁 Xam bal: <strong style="color:#60a5fa;">${pct}%</strong></div>
+    </div>
+  `;
+
+  showModal('result-modal');
+}
+
+function reviewAnswers() {
+  closeModal('result-modal');
+  // Re-show exam in review mode
+  showToast('Cavab yoxlama rejimi hazırlanır...');
+}
+
+// ============================================================
+// RESULTS PAGE
+// ============================================================
+function renderResults() {
+  const completed = exams.filter(e=>e.status==='completed'&&e.results?.length);
+  document.getElementById('results-list').innerHTML = completed.map(e=>`
+    <div class="card" style="margin-bottom:16px;overflow:hidden;">
+      <div style="padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div class="syne" style="font-size:15px;font-weight:700;">${e.title}</div>
+          <div style="font-size:12px;color:var(--text-muted);">${e.subject} • ${e.questions?.length} sual • ${e.duration} dəq</div>
+        </div>
+        <span class="badge badge-gold">✅ Tamamlandı</span>
+      </div>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">Tələbə</th>
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">Xam Bal</th>
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">Son Bal</th>
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">Düzgün</th>
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">Səhv</th>
+            <th style="text-align:left;padding:10px 16px;font-size:11px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border);">Vaxt</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${(e.results||[]).map(r=>`
+            <tr style="border-bottom:1px solid rgba(99,102,241,0.07);">
+              <td style="padding:12px 16px;font-weight:600;">${r.student_name}</td>
+              <td style="padding:12px 16px;"><span style="font-family:'Syne',sans-serif;font-weight:700;color:${r.raw_score>=75?'#34d399':r.raw_score>=50?'#fbbf24':'#f87171'};">${r.raw_score}%</span></td>
+              <td style="padding:12px 16px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:${r.final_score>=75?'#34d399':r.final_score>=50?'#fbbf24':'#f87171'};">${r.final_score}%</span></td>
+              <td style="padding:12px 16px;color:#34d399;font-weight:600;">${r.correct} ✓</td>
+              <td style="padding:12px 16px;color:#f87171;font-weight:600;">${r.wrong} ✗</td>
+              <td style="padding:12px 16px;color:var(--text-muted);">${r.time_spent} dəq</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `).join('') || '<div style="text-align:center;padding:60px;color:var(--text-muted);">Hələ tamamlanan imtahan yoxdur</div>';
+}
+
+function viewResults(examId) {
+  showPage('results');
+}
+
+function deleteExam(examId) {
+  if (!confirm('Bu imtahanı silmək istəyirsiniz?')) return;
+  exams = exams.filter(e=>e.id!==examId);
+  renderExams('all');
+  showToast('🗑 İmtahan silindi');
+}
+
+function editExam(examId) {
+  showToast('✏️ Redaktə rejimi — tezliklə...');
+}
+
+// ============================================================
+// AI COPILOT
+// ============================================================
+let selectedProvider = 'claude';
+const providerInfo = {
+  claude: { name:'Claude', company:'Anthropic', hint:'console.anthropic.com → API Keys → sk-ant-...', model:'claude-sonnet-4-20250514' },
+  chatgpt: { name:'ChatGPT', company:'OpenAI', hint:'platform.openai.com → API Keys → sk-...', model:'gpt-4o' },
+  gemini: { name:'Gemini', company:'Google', hint:'aistudio.google.com → Get API Key → AIza...', model:'gemini-1.5-pro' },
+  copilot: { name:'Copilot', company:'Microsoft', hint:'azure.microsoft.com → Cognitive Services → API Key', model:'gpt-4' },
+};
+
+function selectProvider(provider) {
+  selectedProvider = provider;
+  ['claude','chatgpt','gemini','copilot'].forEach(p => {
+    document.getElementById('prov-'+p)?.classList.toggle('active', p===provider);
+  });
+  const info = providerInfo[provider];
+  document.getElementById('current-provider-label').textContent = info.name;
+  document.getElementById('api-key-hint').textContent = `${info.name} üçün: ${info.hint}`;
+  document.getElementById('api-key-input').value = apiKeys[provider] || '';
+}
+
+function toggleApiKey() {
+  const body = document.getElementById('api-key-body');
+  const icon = document.getElementById('api-key-toggle-icon');
+  const isHidden = body.style.display === 'none';
+  body.style.display = isHidden ? 'block' : 'none';
+  icon.textContent = isHidden ? '▲' : '▼';
+}
+
+function saveApiKey() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key) { alert('API açarı daxil edin'); return; }
+  apiKeys[selectedProvider] = key;
+  localStorage.setItem('mx_api_keys', JSON.stringify(apiKeys));
+  showToast(`✓ ${providerInfo[selectedProvider].name} API açarı saxlandı`);
+}
+
+function loadApiKeys() {
+  const saved = localStorage.getItem('mx_api_keys');
+  if (saved) apiKeys = JSON.parse(saved);
+}
+
+const quickPrompts = {
+  lesson_plan: 'Bu həftə üçün riyaziyyat dərs planı hazırla. Mövzu: kvadrat tənliklər. Hər dərs 60 dəqiqədir.',
+  questions: '10 riyaziyyat testi sualı yarat. Cəbr mövzusu, orta səviyyə. Hər suala 4 seçim variant ver.',
+  analyze: 'Günel Quliyevanın sonuncu 6 dərsdəki balları: 55, 62, 70, 75, 80, 88. Bu proqresi analiz et və tövsiyələr ver.',
+  homework: 'Riyaziyyat üzrə 5 ev tapşırığı sualı yarat. Mövzu: funksiyalar. Çətin səviyyə.',
+  report: 'Oktyabr ayı üçün tələbə proqres hesabatı şablonu yarat.',
+  explain: 'Pifaqor teoremini 10 yaşlı uşağa anlaşıqlı şəkildə izah et.',
+};
+
+function quickPrompt(type) {
+  document.getElementById('chat-input').value = quickPrompts[type];
+  document.getElementById('chat-input').focus();
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const lang = document.querySelector('input[name="ai-lang"]:checked')?.value || 'az';
+  aiLanguage = lang;
+
+  appendMessage(msg, 'user');
+  chatHistory.push({role:'user', content:msg});
+
+  const typingId = appendTyping();
+
+  try {
+    const apiKey = apiKeys[selectedProvider];
+    if (!apiKey) {
+      removeTyping(typingId);
+      appendMessage(`⚠️ ${providerInfo[selectedProvider].name} üçün API açarı tələb olunur. Yuxarıdakı "API Açarı" bölməsindən əlavə edin.`, 'assistant');
+      return;
+    }
+
+    let response;
+    if (selectedProvider === 'claude') {
+      response = await callClaude(apiKey, msg, lang);
+    } else if (selectedProvider === 'chatgpt' || selectedProvider === 'copilot') {
+      response = await callOpenAI(apiKey, msg, lang, selectedProvider);
+    } else if (selectedProvider === 'gemini') {
+      response = await callGemini(apiKey, msg, lang);
+    }
+
+    removeTyping(typingId);
+    appendMessage(response, 'assistant');
+    chatHistory.push({role:'assistant', content:response});
+
+  } catch(err) {
+    removeTyping(typingId);
+    appendMessage(`❌ Xəta: ${err.message}. API açarınızı yoxlayın.`, 'assistant');
+  }
+}
+
+async function callClaude(apiKey, msg, lang) {
+  const sysPrompt = lang==='az'
+    ? 'Sən Mentorix.biz tədris sisteminin AI köməkçisisən. Müəllimlərə kömək edirsən: dərs planı, sual hazırlama, tələbə analizi. Azərbaycan dilində cavab ver.'
+    : 'You are the AI assistant of Mentorix.biz education system. Help teachers with lesson plans, question creation, student analysis. Answer in English.';
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{
+      'Content-Type':'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version':'2023-06-01',
+      'anthropic-dangerous-direct-browser-access':'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1500,
+      system: sysPrompt,
+      messages: chatHistory.slice(-10).concat([{role:'user',content:msg}])
+    })
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error?.message || 'Claude API xətası');
+  }
+  const data = await res.json();
+  return data.content[0].text;
+}
+
+async function callOpenAI(apiKey, msg, lang, provider) {
+  const sysPrompt = lang==='az'
+    ? 'Sən Mentorix.biz tədris sisteminin AI köməkçisisən. Azərbaycan dilində cavab ver.'
+    : 'You are the AI assistant of Mentorix.biz education system. Answer in English.';
+
+  const baseUrl = provider==='copilot'
+    ? 'https://api.cognitive.microsoft.com/openai/deployments/gpt-4/chat/completions?api-version=2024-02-01'
+    : 'https://api.openai.com/v1/chat/completions';
+
+  const res = await fetch(baseUrl, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+    body: JSON.stringify({
+      model: provider==='copilot'?'gpt-4':'gpt-4o',
+      max_tokens: 1500,
+      messages: [{role:'system',content:sysPrompt}, ...chatHistory.slice(-10), {role:'user',content:msg}]
+    })
+  });
+  if (!res.ok) throw new Error('OpenAI API xətası');
+  const data = await res.json();
+  return data.choices[0].message.content;
+}
+
+async function callGemini(apiKey, msg, lang) {
+  const sysPrompt = lang==='az' ? 'Azərbaycan dilində cavab ver. Sən müəllim köməkçisisən.' : 'Answer in English. You are a teacher assistant.';
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`, {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      contents:[{parts:[{text: sysPrompt+'\n\n'+msg}]}],
+      generationConfig:{maxOutputTokens:1500}
+    })
+  });
+  if (!res.ok) throw new Error('Gemini API xətası');
+  const data = await res.json();
+  return data.candidates[0].content.parts[0].text;
+}
+
+function appendMessage(text, role) {
+  const container = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'ai-bubble ' + role;
+  if (role==='assistant') {
+    const prov = providerInfo[selectedProvider];
+    div.innerHTML = `<div style="font-size:11px;font-weight:700;color:var(--blue-bright);margin-bottom:6px;">🤖 ${prov.name} (${prov.company})</div>${formatAIResponse(text)}`;
+  } else {
+    div.innerHTML = `<div style="font-size:11px;font-weight:700;color:#a78bfa;margin-bottom:6px;">👤 Siz</div>${text}`;
+  }
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+function formatAIResponse(text) {
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/`(.*?)`/g, '<code style="background:rgba(59,130,246,0.15);padding:2px 6px;border-radius:4px;font-size:12px;">$1</code>')
+    .replace(/\n/g, '<br>');
+}
+
+function appendTyping() {
+  const container = document.getElementById('chat-messages');
+  const id = 'typing-'+Date.now();
+  const div = document.createElement('div');
+  div.id = id;
+  div.className = 'ai-bubble assistant';
+  div.innerHTML = `<div style="font-size:11px;font-weight:700;color:var(--blue-bright);margin-bottom:6px;">🤖 ${providerInfo[selectedProvider].name}</div>
+    <div style="display:flex;gap:4px;align-items:center;"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return id;
+}
+
+function removeTyping(id) {
+  document.getElementById(id)?.remove();
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function showModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+}
+document.querySelectorAll('.modal-overlay').forEach(o => {
+  o.addEventListener('click', e => {
+    if (e.target===o && o.id !== 'exam-modal') closeModal(o.id);
+  });
+});
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText='position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--surface-2);border:1px solid rgba(16,185,129,0.3);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:600;color:#34d399;box-shadow:0 8px 24px rgba(0,0,0,0.4);';
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+}
+</script>
+</body>
+</html>
