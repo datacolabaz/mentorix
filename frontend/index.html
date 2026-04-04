@@ -5305,13 +5305,15 @@
     .then(data => {
       const users = data.users || [];
       const instructors = users.filter(u => u.role === "instructor");
+      const students = users.filter(u => u.role === "student").length;
       const activeInstructors = instructors.filter(u => u.is_active).length;
 
       document.getElementById("stats-grid").innerHTML = `
-        ${statCard("Müəllimlər", instructors.length, "👨‍🏫", "green", activeInstructors + " aktiv")}
-        ${statCard("Bu aykı Gəlir", "₼0", "💰", "gold", "Cəmi")}
-        ${statCard("Limit Xəbərdarlığı", "0", "⚠️", "red", "Müəllim")}
-      `;
+  ${statCard("Cəmi Tələbə", students, "🎓", "blue", "Sistemdə")}
+  ${statCard("Müəllimlər", instructors.length, "👨‍🏫", "green", activeInstructors + " aktiv")}
+  ${statCard("Bu aykı Gəlir", "₼0", "💰", "gold", "Cəmi")}
+  ${statCard("Limit Xəbərdarlığı", "0", "⚠️", "red", "Müəllim")}
+`;
 
       // Son müəllimlər
       const recentInstructors = instructors.slice(0, 5);
