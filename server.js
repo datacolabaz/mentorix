@@ -41,6 +41,7 @@ app.use('/api/payments',    require('./backend/routes/payments'));
 app.use('/api/analytics',   require('./backend/routes/analytics'));
 app.use('/api/notifications', require('./backend/routes/notifications'));
 app.use('/api/uploads',     require('./backend/routes/uploads'));
+app.use('/api/otp',          require('./backend/routes/otp'));
 
 // ============================================================
 // EXAM PAGE
