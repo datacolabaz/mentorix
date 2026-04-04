@@ -5707,8 +5707,8 @@
               <td><span class="badge ${e.status === "active" ? "badge-green" : "badge-red"}">${e.status === "active" ? "Aktiv" : "Passiv"}</span></td>
               <td>
                 <div style="display:flex;gap:6px;">
-                  <button class="btn btn-secondary btn-sm" onclick="openStudentDetail(`'${e.id}'`)">Profil</button>
-                  <button class="btn btn-sm" style="background:#ef4444;color:white;" onclick="deleteStudent(`'${e.id}'`)">Sil</button>
+                  <button class="btn btn-secondary btn-sm" onclick="openStudentDetail('${e.id}')">Profil</button>
+                  <button class="btn btn-sm" style="background:#ef4444;color:white;" onclick="deleteStudent('${e.id}')">Sil</button>
                   ${currentUser.role === "instructor" ? `<button class="btn btn-ghost btn-sm" onclick="openShareModal('${e.id}')">↗</button>` : ""}
                 </div>
               </td>
