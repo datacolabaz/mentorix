@@ -1162,6 +1162,52 @@
         </div>
       </div>
 
+      <!-- PAGE: Admin Instructors -->
+<div class="page" id="page-instructors" style="padding: 24px">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+    <div>
+      <h2 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;">Müəllimlər</h2>
+      <div style="color:var(--text-muted);font-size:13px;">Bütün müəllimləri idarə et</div>
+    </div>
+    <button class="btn btn-primary" onclick="showAddInstructorModal()">+ Müəllim Əlavə Et</button>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr style="border-bottom:1px solid var(--border);">
+          <th style="padding:12px 16px;text-align:left;font-size:12px;color:var(--text-muted);font-weight:600;">AD</th>
+          <th style="padding:12px 16px;text-align:left;font-size:12px;color:var(--text-muted);font-weight:600;">E-POÇT</th>
+          <th style="padding:12px 16px;text-align:left;font-size:12px;color:var(--text-muted);font-weight:600;">TELEFON</th>
+          <th style="padding:12px 16px;text-align:left;font-size:12px;color:var(--text-muted);font-weight:600;">LİMİT</th>
+          <th style="padding:12px 16px;text-align:left;font-size:12px;color:var(--text-muted);font-weight:600;">STATUS</th>
+          <th style="padding:12px 16px;text-align:left;font-size:12px;color:var(--text-muted);font-weight:600;">ƏMƏLİYYAT</th>
+        </tr>
+      </thead>
+      <tbody id="instructors-table-body">
+        <tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted);">Yüklənir...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Instructor Modal -->
+<div class="modal-overlay hidden" id="add-instructor-modal" onclick="if(event.target===this)hideAddInstructorModal()">
+  <div class="modal" style="max-width:480px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h3 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;">Yeni Müəllim</h3>
+      <button onclick="hideAddInstructorModal()" style="background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">Ad Soyad</label><input id="new-instructor-name" class="input" placeholder="Telman Abdulla" style="width:100%;"></div>
+      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">E-poçt</label><input id="new-instructor-email" class="input" type="email" placeholder="muellim@email.com" style="width:100%;"></div>
+      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">Telefon</label><input id="new-instructor-phone" class="input" placeholder="+994501234567" style="width:100%;"></div>
+      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">Tələbə Limiti</label><input id="new-instructor-limit" class="input" type="number" placeholder="10" value="10" style="width:100%;"></div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:20px;" onclick="addInstructor()">✅ Əlavə Et</button>
+  </div>
+</div>
+
       <!-- PAGE: Instructor Dashboard (unique pilot view) -->
       <div class="page" id="page-instructor-dash" style="padding: 24px">
         <div class="fade-up fade-up-1" style="margin-bottom: 24px">
@@ -4116,6 +4162,7 @@
           notifications: "Bildirişlər",
           settings: "Tənzimləmələr",
           parent: "Valideyn Portalı",
+          instructors: "Müəllimlər",
         };
         document.getElementById("page-title").textContent =
           titles[pageId] || pageId;
@@ -5263,6 +5310,9 @@
           case "analytics":
             loadAnalytics();
             break;
+            case "instructors":
+            loadInstructorsPage();
+            break;
           case "users":
             loadUsers();
             break;
@@ -5296,6 +5346,97 @@
       // ============================================================
       // DASHBOARD — ADMIN
       // ============================================================
+      
+      async function loadInstructorsPage() {
+  const res = await fetch("/api/users", {
+    headers: { Authorization: "Bearer " + localStorage.getItem("mx_token") }
+  });
+  const data = await res.json();
+  const instructors = (data.users || []).filter(u => u.role === "instructor");
+  
+  document.getElementById("instructors-table-body").innerHTML = instructors.length
+    ? instructors.map(i => `
+      <tr style="border-bottom:1px solid var(--border);">
+        <td style="padding:12px 16px;">
+          <div style="font-weight:600;font-size:13px;">${i.full_name}</div>
+        </td>
+        <td style="padding:12px 16px;font-size:13px;color:var(--text-secondary);">${i.email}</td>
+        <td style="padding:12px 16px;font-size:13px;color:var(--text-secondary);">${i.phone || "—"}</td>
+        <td style="padding:12px 16px;">
+          <span style="font-size:13px;font-weight:600;">${i.student_limit || 10}</span>
+          <span style="font-size:11px;color:var(--text-muted);"> tələbə</span>
+        </td>
+        <td style="padding:12px 16px;">
+          <span class="badge ${i.is_active ? 'badge-green' : 'badge-red'}">${i.is_active ? 'Aktiv' : 'Deaktiv'}</span>
+        </td>
+        <td style="padding:12px 16px;">
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-sm" style="background:#ef4444;color:white;" onclick="toggleInstructor('${i.id}', ${i.is_active})">
+              ${i.is_active ? 'Deaktiv et' : 'Aktiv et'}
+            </button>
+            <button class="btn btn-sm btn-secondary" onclick="deleteInstructor('${i.id}')">Sil</button>
+          </div>
+        </td>
+      </tr>
+    `).join("")
+    : `<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text-muted);">Müəllim tapılmadı</td></tr>`;
+}
+
+function showAddInstructorModal() {
+  document.getElementById("add-instructor-modal").classList.remove("hidden");
+}
+
+function hideAddInstructorModal() {
+  document.getElementById("add-instructor-modal").classList.add("hidden");
+}
+
+async function addInstructor() {
+  const full_name = document.getElementById("new-instructor-name").value.trim();
+  const email = document.getElementById("new-instructor-email").value.trim();
+  const phone = document.getElementById("new-instructor-phone").value.trim();
+  const student_limit = parseInt(document.getElementById("new-instructor-limit").value) || 10;
+  
+  if (!full_name || !email || !phone) { showToast("Ad, email və telefon mütləqdir!"); return; }
+  
+  const res = await fetch("/api/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("mx_token") },
+    body: JSON.stringify({ full_name, email, phone, role: "instructor", student_limit, password: Math.random().toString(36).slice(-8) })
+  });
+  const data = await res.json();
+  if (data.success) {
+    showToast("✓ Müəllim əlavə edildi!");
+    hideAddInstructorModal();
+    loadInstructorsPage();
+    document.getElementById("new-instructor-name").value = "";
+    document.getElementById("new-instructor-email").value = "";
+    document.getElementById("new-instructor-phone").value = "";
+    document.getElementById("new-instructor-limit").value = "10";
+  } else {
+    showToast("Xəta: " + (data.message || "Əlavə edilmədi"));
+  }
+}
+
+async function toggleInstructor(id, isActive) {
+  await fetch("/api/users/" + id, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("mx_token") },
+    body: JSON.stringify({ is_active: !isActive })
+  });
+  showToast(isActive ? "Deaktiv edildi" : "Aktiv edildi");
+  loadInstructorsPage();
+}
+
+async function deleteInstructor(id) {
+  if (!confirm("Bu müəllimi silmək istədiyinizə əminsiniz?")) return;
+  await fetch("/api/users/" + id, {
+    method: "DELETE",
+    headers: { Authorization: "Bearer " + localStorage.getItem("mx_token") }
+  });
+  showToast("✓ Müəllim silindi!");
+  loadInstructorsPage();
+}
+      
       function loadAdminDashboard() {
   // Stats - API-dən yüklə
   fetch("/api/users", {
