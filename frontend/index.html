@@ -5297,165 +5297,51 @@
       // DASHBOARD — ADMIN
       // ============================================================
       function loadAdminDashboard() {
-        // Stats
-        const students = mockData.users.filter(
-          (u) => u.role === "student",
-        ).length;
-        const instructors = mockData.users.filter(
-          (u) => u.role === "instructor",
-        ).length;
-        const totalPaid = mockData.payments
-          .filter((p) => p.status === "completed")
-          .reduce((s, p) => s + p.amount, 0);
-        const activeEnrollments = mockData.enrollments.filter(
-          (e) => e.status === "active",
-        ).length;
+  // Stats - API-dən yüklə
+  fetch("/api/users", {
+    headers: { Authorization: "Bearer " + localStorage.getItem("mx_token") }
+  })
+    .then(r => r.json())
+    .then(data => {
+      const users = data.users || [];
+      const instructors = users.filter(u => u.role === "instructor");
+      const activeInstructors = instructors.filter(u => u.is_active).length;
 
-        document.getElementById("stats-grid").innerHTML = `
-          ${statCard("Cəmi Tələbə", students, "🎓", "blue", "+3 bu ay")}
-          ${statCard("Müəllimlər", instructors, "👨‍🏫", "green", "Aktiv")}
-          ${statCard("Bu aykı Gəlir", "₼" + totalPaid, "💰", "gold", "Cəmi")}
-          ${statCard("Aktiv Abunəlik", activeEnrollments, "📚", "cyan", "Aktiv")}
-        `;
+      document.getElementById("stats-grid").innerHTML = `
+        ${statCard("Müəllimlər", instructors.length, "👨‍🏫", "green", activeInstructors + " aktiv")}
+        ${statCard("Bu aykı Gəlir", "₼0", "💰", "gold", "Cəmi")}
+        ${statCard("Limit Xəbərdarlığı", "0", "⚠️", "red", "Müəllim")}
+      `;
 
-        // Attendance chart (last 30 days)
-        setTimeout(() => {
-          const labels = Array.from({ length: 7 }, (_, i) => {
-            const d = new Date();
-            d.setDate(d.getDate() - 6 + i);
-            return d.toLocaleDateString("az-AZ", { weekday: "short" });
-          });
-          const data = [12, 15, 11, 18, 14, 16, 20];
-          charts.attendance = new Chart(
-            document.getElementById("chart-attendance"),
-            {
-              type: "line",
-              data: {
-                labels,
-                datasets: [
-                  {
-                    label: "Davamiyyət",
-                    data,
-                    borderColor: "#3b82f6",
-                    backgroundColor: "rgba(59,130,246,0.1)",
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: "#3b82f6",
-                    pointRadius: 4,
-                  },
-                ],
-              },
-              options: chartOptions(false),
-            },
-          );
-
-          // Referral chart
-          charts.referral = new Chart(
-            document.getElementById("chart-referral"),
-            {
-              type: "doughnut",
-              data: {
-                labels: ["Instagram", "Facebook", "TikTok", "Tövsiyə", "Digər"],
-                datasets: [
-                  {
-                    data: [35, 25, 20, 15, 5],
-                    backgroundColor: [
-                      "#e1306c",
-                      "#3b5998",
-                      "#000000",
-                      "#3b82f6",
-                      "#6366f1",
-                    ],
-                    borderWidth: 0,
-                    hoverOffset: 6,
-                  },
-                ],
-              },
-              options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                  legend: {
-                    labels: {
-                      color: "#94a3b8",
-                      font: { size: 11 },
-                      boxWidth: 10,
-                    },
-                    position: "bottom",
-                  },
-                  tooltip: {
-                    callbacks: {
-                      label: (ctx) => `${ctx.label}: ${ctx.parsed}%`,
-                    },
-                  },
-                },
-                cutout: "65%",
-              },
-            },
-          );
-        }, 50);
-
-        // Recent students
-        const recent = mockData.users
-          .filter((u) => u.role === "student")
-          .slice(0, 5);
-        document.getElementById("recent-students-list").innerHTML = recent
-          .map(
-            (s) => `
+      // Son müəllimlər
+      const recentInstructors = instructors.slice(0, 5);
+      document.getElementById("recent-instructors-list").innerHTML = recentInstructors.length
+        ? recentInstructors.map(i => `
           <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">
-            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#6366f1);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">
-              ${s.full_name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
+            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#10b981,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;">
+              ${i.full_name.split(" ").map(n => n[0]).join("")}
             </div>
             <div style="flex:1;min-width:0;">
-              <div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${s.full_name}</div>
-              <div style="font-size:11px;color:var(--text-muted);">${s.email}</div>
+              <div style="font-size:13px;font-weight:600;">${i.full_name}</div>
+              <div style="font-size:11px;color:var(--text-muted);">${i.email}</div>
             </div>
-            <span class="badge badge-green">Aktiv</span>
+            <span class="badge ${i.is_active ? 'badge-green' : 'badge-red'}">${i.is_active ? 'Aktiv' : 'Deaktiv'}</span>
           </div>
-        `,
-          )
-          .join("");
+        `).join("")
+        : `<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:20px;">Müəllim yoxdur</div>`;
 
-        // Payment alerts
-        const alerts = mockData.enrollments.filter((e) => {
-          const limit =
-            e.billing_type === "8_lessons"
-              ? 8
-              : e.billing_type === "12_lessons"
-                ? 12
-                : null;
-          if (!limit) return false;
-          return e.lesson_count >= limit - 2;
-        });
-
-        document.getElementById("payment-alerts-list").innerHTML = alerts.length
-          ? alerts
-              .map((e) => {
-                const student = mockData.users.find(
-                  (u) => u.id === e.student_id,
-                );
-                const limit = e.billing_type === "8_lessons" ? 8 : 12;
-                const remaining = limit - e.lesson_count;
-                const isUrgent = remaining <= 1;
-                return `
-            <div class="${isUrgent ? "alert-red" : "alert-yellow"}" style="margin-bottom:10px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;">
-                <div>
-                  <div style="font-weight:600;font-size:13px;color:${isUrgent ? "#f87171" : "#fbbf24"}">${student?.full_name}</div>
-                  <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${remaining} dərs qalıb — ${e.billing_type.replace("_", " ")}</div>
-                </div>
-                <span style="font-size:20px;">${isUrgent ? "🔴" : "🟡"}</span>
-              </div>
-            </div>
-          `;
-              })
-              .join("")
-          : `<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:20px;">✅ Ödəniş xəbərdarlığı yoxdur</div>`;
-      }
+      // Limit xəbərdarlıqları
+      document.getElementById("limit-alerts-list").innerHTML = 
+        `<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:20px;">✅ Limit xəbərdarlığı yoxdur</div>`;
+    })
+    .catch(() => {
+      document.getElementById("stats-grid").innerHTML = `
+        ${statCard("Müəllimlər", "—", "👨‍🏫", "green", "Aktiv")}
+        ${statCard("Bu aykı Gəlir", "₼—", "💰", "gold", "Cəmi")}
+        ${statCard("Limit Xəbərdarlığı", "—", "⚠️", "red", "Müəllim")}
+      `;
+    });
+}
 
       function statCard(label, value, icon, color, sub) {
         const gradients = {
