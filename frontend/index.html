@@ -1117,24 +1117,35 @@
         </div>
       </div>
 
-      <!-- PAGE: Admin Dashboard -->
-      <div class="page" id="page-dashboard" style="padding: 24px">
-        <div class="fade-up fade-up-1">
-          <div style="margin-bottom: 24px">
-            <div
-              id="welcome-msg"
-              style="
-                font-family: &quot;Syne&quot;, sans-serif;
-                font-size: 22px;
-                font-weight: 700;
-              "
-            ></div>
-            <div
-              style="color: var(--text-muted); font-size: 13px; margin-top: 4px"
-              id="welcome-date"
-            ></div>
-          </div>
-        </div>
+    <!-- PAGE: Admin Dashboard -->
+<div class="page" id="page-dashboard" style="padding: 24px">
+  <div class="fade-up fade-up-1">
+    <div style="margin-bottom: 24px">
+      <div id="welcome-msg" style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;"></div>
+      <div style="color:var(--text-muted);font-size:13px;margin-top:4px;" id="welcome-date"></div>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px;" id="stats-grid">
+    <!-- Injected by JS -->
+  </div>
+
+  <!-- Limit xəbərdarlıqları -->
+  <div class="card" style="padding:20px;margin-bottom:24px;">
+    <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:16px;">⚠️ Limit Xəbərdarlıqları</div>
+    <div id="limit-alerts-list"></div>
+  </div>
+
+  <!-- Son müəllimlər -->
+  <div class="card" style="padding:20px;">
+    <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;">
+      <span>Son Müəllimlər</span>
+      <button class="btn btn-ghost btn-sm" onclick="showPage('instructors')">Hamısı →</button>
+    </div>
+    <div id="recent-instructors-list"></div>
+  </div>
+</div>
 
         <!-- Stat cards -->
         <div
