@@ -122,3 +122,12 @@ router.get("/meta/referral-sources", authenticate, async (req, res) => {
 });
 
 module.exports = router;
+
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    await db.query("DELETE FROM enrollments WHERE id = $1", [req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
