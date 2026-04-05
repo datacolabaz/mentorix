@@ -5019,6 +5019,10 @@
             showLoginError("Zəhmət olmasa telefon nömrəniz ilə OTP ilə daxil olun 👇");
             return;
           }
+          if (data.user.role === "student" || data.user.role === "parent") {
+            showLoginError("Zəhmət olmasa telefon nömrəniz ilə OTP ilə daxil olun 👇");
+            return;
+          }
           localStorage.setItem("mx_token", data.token);
           localStorage.setItem("mx_user", JSON.stringify(data.user));
           currentUser = data.user;
