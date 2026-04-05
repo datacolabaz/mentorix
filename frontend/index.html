@@ -7362,10 +7362,9 @@ async function deleteInstructor(id) {
           const userData = await apiRequest("POST", "/auth/register", {
             full_name: name,
             email,
-            password: "Pass@123", // default şifrə
+            password: "Pass@123",
             role: "student",
             phone,
-            parent_id: parentId,
           });
 
           if (!userData?.success) {
@@ -7374,16 +7373,14 @@ async function deleteInstructor(id) {
           }
 
           // 2. Valideyn yarat (eger varsa)
-          const parentName = document.getElementById("ns-parent-name").value.trim();
-          const parentPhone = document.getElementById("ns-parent-phone").value.trim();
-          let parentId = null;
+          const parentName = document.getElementById("ns-parent-name")?.value?.trim() || "";
+          const parentPhone = document.getElementById("ns-parent-phone")?.value?.trim() || "";
           if (parentName && parentPhone) {
-            const parentData = await apiRequest("POST", "/auth/create-parent", {
+            await apiRequest("POST", "/auth/create-parent", {
               full_name: parentName,
               phone: parentPhone,
               student_id: userData.user.id
             });
-            if (parentData?.success) parentId = parentData.parent_id;
           }
 
           // 3. Enrollment yarat
