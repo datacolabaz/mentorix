@@ -4138,10 +4138,12 @@
             />
           </div>
           <div>
-            <label class="form-label">Valideyn seçin (ixtiyari)</label>
-            <select class="form-input" id="ns-parent">
-              <option value="">— Valideyn yoxdur —</option>
-            </select>
+            <label class="form-label">Valideyn Adı (ixtiyari)</label>
+            <input class="form-input" id="ns-parent-name" placeholder="Valideyni adı soyadı"/>
+          </div>
+          <div>
+            <label class="form-label">Valideyn Telefonu (ixtiyari)</label>
+            <input class="form-input" id="ns-parent-phone" placeholder="+994XXXXXXXXX"/>
           </div>
           <div>
             <label class="form-label">Billing növü</label>
@@ -7346,7 +7348,20 @@ async function deleteInstructor(id) {
             return;
           }
 
-          // 2. Enrollment yarat
+          // 2. Valideyn yarat (eger varsa)
+          const parentName = document.getElementById("ns-parent-name").value.trim();
+          const parentPhone = document.getElementById("ns-parent-phone").value.trim();
+          let parentId = null;
+          if (parentName && parentPhone) {
+            const parentData = await apiRequest("POST", "/auth/create-parent", {
+              full_name: parentName,
+              phone: parentPhone,
+              student_id: userData.user.id
+            });
+            if (parentData?.success) parentId = parentData.parent_id;
+          }
+
+          // 3. Enrollment yarat
           const enrollData = await apiRequest("POST", "/enrollments", {
             student_id: userData.user.id,
             billing_type: billing,
