@@ -5466,28 +5466,22 @@ async function deleteInstructor(id) {
       // DASHBOARD — INSTRUCTOR
       // ============================================================
       async function loadInstructorDashboard() {
-        document.getElementById("inst-welcome").textContent =
-          `Xoş gəldin, ${currentUser.full_name.split(" ")[0]}! 👋`;
+        const welcomeEl = document.getElementById("inst-welcome");
+        if(welcomeEl) welcomeEl.textContent = `Xoş gəldin, ${currentUser.full_name.split(" ")[0]}! 👋`;
 
         try {
-          const data = await apiRequest(
-            "GET",
-            "/analytics/instructor/" + currentUser.id,
-          );
-
-          if (data?.success) {
-            const { students, avg_score, attendance_rate, monthly_revenue } =
-              data;
-            document.getElementById("inst-stats-grid").innerHTML = `
-              ${statCard("Cəmi Tələbə", students?.length || 0, "🎓", "blue", "Aktiv")}
-              ${statCard("Orta Bal", (avg_score || 0) + "%", "📊", "green", "Bütün tələbələr")}
-              ${statCard("Davamiyyət", (attendance_rate || 0) + "%", "✅", "gold", "Ümumi nisbət")}
-              ${statCard("Bu aykı Gəlir", "₼" + (monthly_revenue || 0), "💰", "cyan", "Cəmi")}
-            `;
-          }
+          const data = await apiRequest("GET", "/students");
+          const students = data?.students || [];
+          const grid = document.getElementById("inst-stats-grid");
+          if(grid) grid.innerHTML = `
+            ${statCard("Cəmi Tələbə", students.length, "🎓", "blue", "Aktiv")}
+            ${statCard("Orta Bal", "—", "📊", "green", "Bütün tələbələr")}
+            ${statCard("Davamiyyət", "—", "✅", "gold", "Ümumi nisbət")}
+            ${statCard("Bu aykı Gəlir", "₼0", "💰", "cyan", "Cəmi")}
+          `;
         } catch (err) {
-          // API qoşulmayıbsa mock data göstər
-          document.getElementById("inst-stats-grid").innerHTML = `
+          const grid = document.getElementById("inst-stats-grid");
+          if(grid) grid.innerHTML = `
             ${statCard("Cəmi Tələbə", 0, "🎓", "blue", "Aktiv")}
             ${statCard("Orta Bal", "0%", "📊", "green", "Bütün tələbələr")}
             ${statCard("Davamiyyət", "0%", "✅", "gold", "Ümumi nisbət")}
