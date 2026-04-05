@@ -6732,11 +6732,12 @@ async function deleteInstructor(id) {
                 : myEnrollment.billing_type === "12_lessons"
                   ? 12
                   : null;
-            if (limit && myEnrollment.lesson_count >= limit - 2) {
+            document.getElementById('payment-amount-block').style.display = 'none';
+          if (limit && myEnrollment.lesson_count >= limit - 2) {
+            document.getElementById('payment-amount-block').style.display = 'block';
               const amount =
                 myEnrollment.billing_type === "8_lessons" ? 120 : 180;
-              document.getElementById("payment-due-amount").textContent =
-                amount;
+              document.getElementById("payment-due-amount").textContent = amount;
               document.getElementById("pay-btn-amount").textContent = amount;
               document.getElementById("payment-due-detail").textContent =
                 `${billingLabel(myEnrollment.billing_type)} dövrü üçün ödəniş`;
