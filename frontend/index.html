@@ -4991,6 +4991,24 @@
       // ============================================================
       // AUTH
       // ============================================================
+      function showLoginFor(role) {
+        const emailBlock = document.getElementById('login-email').parentElement;
+        const passBlock = document.getElementById('login-password').parentElement;
+        const loginBtn = document.querySelector('button[onclick="doLogin()"]');
+        const otpSection = document.getElementById('otp-step1');
+        
+        if (role === 'student' || role === 'parent') {
+          emailBlock.style.display = 'none';
+          passBlock.style.display = 'none';
+          loginBtn.style.display = 'none';
+          if (otpSection) otpSection.parentElement.style.display = 'block';
+        } else {
+          emailBlock.style.display = 'block';
+          passBlock.style.display = 'block';
+          loginBtn.style.display = 'block';
+        }
+      }
+
       function quickLogin(email, pass) {
         document.getElementById("login-email").value = email;
         document.getElementById("login-password").value = pass;
