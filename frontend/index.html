@@ -2729,7 +2729,31 @@
       </div>
 
       <!-- PAGE: Admin Instructors -->
-<div class="page" id="page-instructors" style="padding: 24px">
+
+
+
+<!-- Add Instructor Modal -->
+<div class="modal-overlay hidden" id="add-instructor-modal" onclick="if(event.target===this)hideAddInstructorModal()">
+  <div class="modal" style="max-width:480px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <h3 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;">Yeni Müəllim</h3>
+      <button onclick="hideAddInstructorModal()" style="background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">Ad Soyad</label><input id="new-instructor-name" class="input" placeholder="Telman Abdulla" style="width:100%;"></div>
+      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">E-poçt</label><input id="new-instructor-email" class="input" type="email" placeholder="muellim@email.com" style="width:100%;"></div>
+      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">Telefon</label><input id="new-instructor-phone" class="input" placeholder="+994501234567" style="width:100%;"></div>
+      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">Tələbə Limiti</label><input id="new-instructor-limit" class="input" type="number" placeholder="10" value="10" style="width:100%;"></div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;margin-top:20px;" onclick="addInstructor()">✅ Əlavə Et</button>
+  </div>
+</div>
+
+      <!-- PAGE: Instructor Dashboard (unique pilot view) -->
+
+      
+      <div class="page" id="page-instructor-dash" style="padding: 24px">
+      <div class="page" id="page-instructors" style="padding: 24px">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
     <div>
       <h2 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;">Müəllimlər</h2>
@@ -2756,26 +2780,6 @@
     </table>
   </div>
 </div>
-
-<!-- Add Instructor Modal -->
-<div class="modal-overlay hidden" id="add-instructor-modal" onclick="if(event.target===this)hideAddInstructorModal()">
-  <div class="modal" style="max-width:480px;">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-      <h3 style="font-family:'Syne',sans-serif;font-size:16px;font-weight:700;">Yeni Müəllim</h3>
-      <button onclick="hideAddInstructorModal()" style="background:none;border:none;color:var(--text-muted);font-size:20px;cursor:pointer;">✕</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">Ad Soyad</label><input id="new-instructor-name" class="input" placeholder="Telman Abdulla" style="width:100%;"></div>
-      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">E-poçt</label><input id="new-instructor-email" class="input" type="email" placeholder="muellim@email.com" style="width:100%;"></div>
-      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">Telefon</label><input id="new-instructor-phone" class="input" placeholder="+994501234567" style="width:100%;"></div>
-      <div><label style="font-size:12px;color:var(--text-muted);margin-bottom:4px;display:block;">Tələbə Limiti</label><input id="new-instructor-limit" class="input" type="number" placeholder="10" value="10" style="width:100%;"></div>
-    </div>
-    <button class="btn btn-primary" style="width:100%;margin-top:20px;" onclick="addInstructor()">✅ Əlavə Et</button>
-  </div>
-</div>
-
-      <!-- PAGE: Instructor Dashboard (unique pilot view) -->
-      <div class="page" id="page-instructor-dash" style="padding: 24px">
     <!-- end main-content -->
 
     <!-- Create Exam Modal -->
@@ -4103,6 +4107,9 @@
             break;
           case "analytics":
             loadAnalytics();
+            break;
+          case "instructors":
+            loadInstructorsPage();
             break;
           case "users":
             loadUsers();
