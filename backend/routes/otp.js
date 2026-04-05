@@ -36,7 +36,7 @@ router.post("/send", async (req, res) => {
 
   // İstifadəçi mövcuddur?
   const { rows } = await db.query(
-    "SELECT * FROM users WHERE phone = $1 AND is_active = TRUE",
+    "SELECT * FROM users WHERE REPLACE(phone, '+', '') = $1 AND is_active = TRUE",
     [cleanPhone],
   );
   if (!rows.length)
@@ -93,7 +93,7 @@ router.post("/verify", async (req, res) => {
 
   // İstifadəçini tap
   const userRes = await db.query(
-    "SELECT * FROM users WHERE phone = $1 AND is_active = TRUE",
+    "SELECT * FROM users WHERE REPLACE(phone, '+', '') = $1 AND is_active = TRUE",
     [cleanPhone],
   );
   const user = userRes.rows[0];
