@@ -6719,8 +6719,34 @@ async function deleteInstructor(id) {
         const instView = document.getElementById("payment-instructor-view");
 
         if (role === "student" || role === "parent") {
-          portal.style.display = "none";
           instView.style.display = "none";
+          // API-den enrollment melumatini al
+          apiRequest("GET", "/students/my").then(data => {
+            if (data && data.enrollment) {
+              const e = data.enrollment;
+              const limit = e.billing_type === "8_lessons" ? 8 : e.billing_type === "12_lessons" ? 12 : null;
+              const hasDebt = limit && e.lesson_count >= limit - 2;
+              if (hasDebt) {
+                portal.style.display = "block";
+                const amount = e.billing_type === "8_lessons" ? 120 : 180;
+                document.getElementById("payment-due-amount").textContent = amount;
+                document.getElementById("pay-btn-amount").textContent = amount;
+                document.getElementById("payment-due-detail").textContent = e.billing_type === "8_lessons" ? "8 dərs dövrü" : "12 dərs dövrü";
+              } else {
+                portal.style.display = "none";
+                document.getElementById("payment-instructor-view").style.display = "block";
+                document.getElementById("payment-stats-grid").innerHTML = `
+                  <div class="card" style="padding:24px;text-align:center;">
+                    <div style="font-size:40px;margin-bottom:12px;">✅</div>
+                    <div style="font-family:Syne,sans-serif;font-size:16px;font-weight:700;color:#34d399;">Cari borcunuz yoxdur</div>
+                    <div style="font-size:13px;color:var(--text-muted);margin-top:8px;">${e.lesson_count} dərs tamamlandı</div>
+                  </div>`;
+                document.getElementById("payments-tbody").innerHTML = "";
+              }
+            } else {
+              portal.style.display = "none";
+            }
+          }).catch(() => { portal.style.display = "none"; });
           // Find pending payment
           const myEnrollment = mockData.enrollments.find(
             (e) => e.student_id === currentUser.id,
