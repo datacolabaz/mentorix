@@ -860,6 +860,21 @@
               Bizimlə əlaqə
             </a>
           </div>
+
+          <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); text-align: center;">
+            <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">və ya telefon nömrəsi ilə daxil olun</div>
+            <div id="otp-step1">
+              <input id="otp-phone" class="form-input" placeholder="+994XXXXXXXXX" style="margin-bottom: 10px;"/>
+              <button class="btn btn-secondary" style="width:100%; justify-content:center;" onclick="sendOtp()">📱 OTP Göndər</button>
+            </div>
+            <div id="otp-step2" style="display:none;">
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;" id="otp-sent-msg"></div>
+              <input id="otp-code" class="form-input" placeholder="4 rəqəmli kod" maxlength="4" style="margin-bottom: 10px; text-align:center; font-size:20px; letter-spacing:8px;"/>
+              <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="verifyOtp()">✅ Daxil ol</button>
+              <button class="btn btn-ghost btn-sm" style="width:100%; justify-content:center; margin-top:6px;" onclick="document.getElementById('otp-step1').style.display='block';document.getElementById('otp-step2').style.display='none'">← Geri</button>
+            </div>
+            <div id="otp-error" style="display:none; color:#f87171; font-size:12px; margin-top:8px;"></div>
+          </div>
           <div
             style="
               margin-top: 24px;
@@ -4849,6 +4864,56 @@
      JAVASCRIPT
      ============================================================ -->
     <script>
+
+      async function sendOtp() {
+        const phone = document.getElementById('otp-phone').value.trim();
+        if (!phone) { showOtpError('Telefon nömrəsi daxil edin'); return; }
+        try {
+          const res = await fetch('/api/otp/send', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ phone })
+          });
+          const data = await res.json();
+          if (data.success) {
+            document.getElementById('otp-step1').style.display = 'none';
+            document.getElementById('otp-step2').style.display = 'block';
+            document.getElementById('otp-sent-msg').textContent = phone + ' nömrəsinə kod göndərildi';
+            document.getElementById('otp-error').style.display = 'none';
+          } else {
+            showOtpError(data.message || 'Xəta baş verdi');
+          }
+        } catch(e) { showOtpError('Server xətası'); }
+      }
+
+      async function verifyOtp() {
+        const phone = document.getElementById('otp-phone').value.trim();
+        const code = document.getElementById('otp-code').value.trim();
+        if (!code) { showOtpError('Kodu daxil edin'); return; }
+        try {
+          const res = await fetch('/api/otp/verify', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ phone, code })
+          });
+          const data = await res.json();
+          if (data.success) {
+            localStorage.setItem('mx_token', data.token);
+            localStorage.setItem('mx_user', JSON.stringify(data.user));
+            currentUser = data.user;
+            document.getElementById('login-screen').style.display = 'none';
+            initApp();
+          } else {
+            showOtpError(data.message || 'Kod yanlışdır');
+          }
+        } catch(e) { showOtpError('Server xətası'); }
+      }
+
+      function showOtpError(msg) {
+        const el = document.getElementById('otp-error');
+        el.textContent = msg;
+        el.style.display = 'block';
+      }
       // API helper
       async function apiRequest(method, endpoint, body = null) {
         const token = localStorage.getItem("mx_token");
