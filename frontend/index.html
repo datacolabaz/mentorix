@@ -1156,9 +1156,8 @@
             gap: 16px;
             margin-bottom: 24px;
           "
-          id="stats-grid"
+          id="stats-grid-2"
         >
-          <!-- Injected by JS -->
         </div>
 
       <!-- PAGE: Students List -->
@@ -7012,26 +7011,7 @@ async function deleteInstructor(id) {
         showToast("✓ Profil yeniləndi");
       }
 
-      async function deleteStudent(enrollmentId) {
-        if (!confirm("Bu tələbəni silmək istədiyinizə əminsiniz?")) return;
-        try {
-          const res = await fetch("/api/enrollments/" + enrollmentId, {
-            method: "DELETE",
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("mx_token"),
-            },
-          });
-          const data = await res.json();
-          if (data.success) {
-            showToast("✓ Tələbə silindi");
-            showPage("students");
-          } else {
-            showToast("Xəta: " + (data.message || "Silinmədi"));
-          }
-        } catch (err) {
-          showToast("Bağlantı xətası");
-        }
-      }
+      
 
       // ============================================================
       // PARENT PORTAL

@@ -33,3 +33,31 @@ router.delete('/:id', authenticate, authorize('admin'), async (req, res) => {
 });
 
 module.exports = router;
+
+// POST - yeni istifadeci elave et
+router.post('/', authenticate, authorize('admin'), async (req, res) => {
+  const { full_name, email, phone, role, student_limit, password } = req.body;
+  try {
+    const bcrypt = require('bcryptjs');
+    const hash = await bcrypt.hash(password || 'Pass@123', 10);
+    const result = await req.db.query(
+      `INSERT INTO users (full_name, email, phone, role, student_limit, password_hash, is_active)
+       VALUES ($1, $2, $3, $4, $5, $6, true) RETURNING id, full_name, email, role`,
+      [full_name, email, phone, role || 'instructor', student_limit || 10, hash]
+    );
+    res.json({ success: true, user: result.rows[0] });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+});
+
+// PATCH - istifadecini yenile
+router.patch('/:id', authenticate, authorize('admin'), async (req, res) => {
+  const { is_active } = req.body;
+  try {
+    await req.db.query('UPDATE users SET is_active=$1 WHERE id=$2', [is_active, req.params.id]);
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+});
