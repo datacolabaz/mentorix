@@ -6719,8 +6719,9 @@ async function deleteInstructor(id) {
         const instView = document.getElementById("payment-instructor-view");
 
         if (role === "student" || role === "parent") {
+          portal.style.display = "block";
           instView.style.display = "none";
-          // API-den enrollment melumatini al
+          // dummy
           apiRequest("GET", "/students/my").then(data => {
             if (data && data.enrollment) {
               const e = data.enrollment;
