@@ -158,3 +158,37 @@ exports.changePassword = async (req, res) => {
   ]);
   res.json({ success: true, message: "Password changed successfully" });
 };
+
+// Valideyn yarat ve telebeye bagla
+exports.createParent = async (req, res) => {
+  try {
+    const { full_name, phone, student_id } = req.body;
+    if (!full_name || !phone) return res.json({ success: false, message: 'Ad ve telefon lazimdir' });
+    
+    const bcrypt = require('bcryptjs');
+    const hash = await bcrypt.hash(Math.random().toString(36).slice(-8), 10);
+    const email = 'parent_' + phone.replace(/\D/g,'') + '@mentorix.biz';
+    
+    // Artiq varsa tap
+    let parentId;
+    const exists = await db.query('SELECT id FROM users WHERE phone = $1 AND role = $2', [phone, 'parent']);
+    if (exists.rows.length) {
+      parentId = exists.rows[0].id;
+    } else {
+      const { rows } = await db.query(
+        'INSERT INTO users (full_name, email, password_hash, role, phone) VALUES ($1,$2,$3,$4,$5) RETURNING id',
+        [full_name, email, hash, 'parent', phone]
+      );
+      parentId = rows[0].id;
+    }
+    
+    // Telebenin student_profiles-ini yenile
+    if (student_id) {
+      await db.query('UPDATE student_profiles SET parent_id=$1 WHERE user_id=$2', [parentId, student_id]);
+    }
+    
+    res.json({ success: true, parent_id: parentId });
+  } catch(err) {
+    res.json({ success: false, message: err.message });
+  }
+};
