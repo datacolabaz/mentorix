@@ -6719,7 +6719,7 @@ async function deleteInstructor(id) {
         const instView = document.getElementById("payment-instructor-view");
 
         if (role === "student" || role === "parent") {
-          portal.style.display = "block";
+          portal.style.display = "none";
           instView.style.display = "none";
           // Find pending payment
           const myEnrollment = mockData.enrollments.find(
