@@ -4929,7 +4929,9 @@
             localStorage.setItem('mx_token', data.token);
             localStorage.setItem('mx_user', JSON.stringify(data.user));
             currentUser = data.user;
-            document.getElementById('login-screen').style.display = 'none';
+            const ls = document.getElementById('login-screen');
+            ls.style.display = 'none';
+            ls.style.setProperty('display', 'none', 'important');
             initApp();
           } else {
             showOtpError(data.message || 'Kod yanlışdır');
